@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-async function createPaymentLink(buyerCPF) {
+async function createPaymentLink(userData) {
     console.log(process.env.INFINITE_PAY_HANDLE);
     const response = await axios.post("https://api.checkout.infinitepay.io/links", {
             "handle": process.env.INFINITE_PAY_HANDLE,
@@ -14,7 +14,12 @@ async function createPaymentLink(buyerCPF) {
                     "description": "Ingresso Arapuca"
                 }
             ],
-            "order_nsu": buyerCPF
+            "order_nsu": userData.userCPF,
+            "customer": {
+                "name": userData.userName,
+                "email": userData.userEmail,
+                "phone_number": userData.userPhone
+            }
     }).catch(function (error) {
         if (error.response) {
             console.log(error.response.data);

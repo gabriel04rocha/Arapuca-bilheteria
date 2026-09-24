@@ -57,11 +57,14 @@ export default function Home() {
   const confirmedNames = new Set(entries.map((e) => e.name));
 
   async function handleEfetuarPagamento() {
-    const response = await axios.post( "http://localhost:4000/api/pagamento", {
-        data: {
-          userCPF: userData.cpf
+    const response = await axios.post( "http://localhost:4000/api/pagamento", 
+        {
+          userName: userData.name,
+          userEmail: userData.email,
+          userCPF: userData.cpf,
+          userPhone: userData.phone
         }
-      })
+      )
     window.location.replace(response.data.url);
   }
 
@@ -104,6 +107,9 @@ export default function Home() {
               <div className="flex flex-col gap-2">
                 <h1 className="text-lg">Informações salvas:</h1>
                 <div>
+                  <p>Nome: {userData.name}</p>
+                  <p>E-mail: {userData.email}</p>
+                  <p>Telefone: {userData.phone}</p>
                   <p>CPF: {userData.cpf}</p>
                 </div>
               </div>
@@ -117,7 +123,7 @@ export default function Home() {
         </div>
       </section>
 
-      {userData.cpf && <section className="step">
+      {!editState && <section className="step">
         <div className="step-head">
           <span className="step-num">II</span>
           <h2 className="step-title">Pagamento</h2>

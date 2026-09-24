@@ -1,8 +1,9 @@
 import getPaymentLink from "../Controllers/checkoutController.js" 
 
-async function checkoutRoutes(app, options) {
+async function checkoutRoutes(app) {
     app.post('/pagamento', async (request, reply) => {
-        const paymentLink = await getPaymentLink(request.body.data.userCPF);
+        const paymentLink = await getPaymentLink(request.body);
+        console.log(request.body)
         return paymentLink
     })
 }
