@@ -1,7 +1,7 @@
 import createPaymentLink from "../Services/infinitePayService.js";
 
-async function getPaymentLink(userCPF) {
-    const paymentLink = await createPaymentLink(userCPF);
+async function getPaymentLink(userData) {
+    const paymentLink = await createPaymentLink(userData);
     return paymentLink;
 }
 
