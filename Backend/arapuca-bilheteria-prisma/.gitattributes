@@ -1,0 +1,6 @@
+packages/database/src/contract.json linguist-generated
+packages/database/src/contract.d.ts linguist-generated
+packages/database/src/ops.json linguist-generated
+packages/database/src/migration.json linguist-generated
+migrations/snapshots/**/contract.json linguist-generated
+migrations/snapshots/**/contract.d.ts linguist-generated
