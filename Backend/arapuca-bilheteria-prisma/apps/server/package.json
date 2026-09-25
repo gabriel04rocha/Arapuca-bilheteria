@@ -1,0 +1,24 @@
+{
+  "name": "@repo/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/server.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
+  },
+  "dependencies": {
+    "@repo/database": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "tsdown": "^0.22.14",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
