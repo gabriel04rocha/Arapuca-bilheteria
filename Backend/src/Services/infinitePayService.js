@@ -1,16 +1,13 @@
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { env } from "../config/env.ts"
 
 export async function createPaymentLink(userData) {
-    console.log(process.env.INFINITE_PAY_HANDLE);
     const response = await axios.post("https://api.checkout.infinitepay.io/links", {
-            "handle": process.env.INFINITE_PAY_HANDLE,
+            "handle": env.infinitePayHandle,
             "items": [
                 {
                     "quantity": 1,
-                    "price": process.env.TICKET_PRICE,
+                    "price": env.ticketPriceCents,
                     "description": "Ingresso Arapuca"
                 }
             ],

@@ -1,10 +1,11 @@
 import fp from "fastify-plugin";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { env } from "../config/env.ts"
 
 const prismaPlugin = fp(async (fastify) => {
   const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
+    connectionString: env.databaseUrl,
   });
 
   const prisma = new PrismaClient({
