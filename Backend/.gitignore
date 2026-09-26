@@ -1,7 +1,8 @@
 .neon
 node_modules/
 .env
-
+.env.*
+!.env.example
 /generated/prisma
 dist/
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import qs from "qs"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CONFIG } from "@/lib/config";
 import FormComponent from "../../components/ui/FormComponent";
 import axios from "axios";
@@ -18,7 +20,9 @@ const fmtMoney = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Home() {
-  const [entries, setEntries] = useState<Entry[]>([]);
+  const [isLeaving, setIsLeaving] = useState(false)
+  const [alertSwitch, setAlertSwitch] = useState(true)
+  const [isAlertVisible, setIsAlertVisible] = useState(false)
   const [userData, setUserData] = useState({});
   const [editState, setEditState] = useState(true);
 
@@ -32,31 +36,58 @@ export default function Home() {
     setEditState(true);
   }
 
-  const loadEntries = useCallback(async () => {
-    try {
-      const res = await fetch("/api/comprovantes", { cache: "no-store" });
-      const data = await res.json();
-      setEntries(data.entries || []);
-    } catch {
-      setEntries([]);
+  async function handleEfetuarPagamento() {
+    const ticketExists = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets?`, {
+      params: {
+        userCPF: userData.cpf.replace(/\D/g, '')
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      }
+    })
+
+    if (ticketExists) {
+      alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true)
+      console.log("AlerIsVisible = true")
+      setIsAlertVisible(true);
+    } else {
+      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/api/pagamento`, 
+          {
+            userName: userData.name,
+            userEmail: userData.email,
+            userCPF: userData.cpf.replace(/\D/g, ''),
+            userPhone: userData.phone
+          }
+        )
+      window.location.replace(response.data.url);
     }
-  }, []);
+
+  }
 
   useEffect(() => {
-    loadEntries();
-  }, [loadEntries]);
 
-  async function handleEfetuarPagamento() {
-    const response = await axios.post( "http://localhost:4000/api/pagamento", 
-        {
-          userName: userData.name,
-          userEmail: userData.email,
-          userCPF: userData.cpf.replace(/\D/g, ''),
-          userPhone: userData.phone
-        }
-      )
-    window.location.replace(response.data.url);
-  }
+    const exitTimer = setTimeout(() => {
+      console.log("isLeaving = true")
+      setIsLeaving(true);
+    }, 5000)
+    
+    const removeTimer = setTimeout(() => {
+      console.log("alertIsVisible = false")
+      setIsAlertVisible(false);
+    }, 5300)
+    
+    const clearState = setTimeout(() => {
+      console.log("isLeaving = false")
+      setIsLeaving(false);
+    }, 5350)
+
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+      clearTimeout(clearState);
+    }
+    
+  }, [alertSwitch])
 
   return (
     <div className="wrap">
@@ -127,6 +158,15 @@ export default function Home() {
           </button>
         </div>
       </section>}
+
+      {isAlertVisible && <Alert className={`
+        transition-all ease-in-out duration-300 fixed bottom-[10%] left-[25%] md:left-[70%]
+        ${!isLeaving ? " animate-in fade-in slide-in-from-right-2" : ''}
+        ${isLeaving ? " animate-out fade-out slide-out-to-top2" : ''}
+        `}>
+        <AlertTitle>Erro!</AlertTitle>
+        <AlertDescription>Já existe um ingresso cadastrado no CPF inserido. Por favor, mude o CPF.</AlertDescription>
+      </Alert>}
       </div>
 
       <footer>Arapuca, bilheteria online</footer>
