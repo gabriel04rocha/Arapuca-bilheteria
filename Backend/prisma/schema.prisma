@@ -7,8 +7,65 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id                     String      @id @unique @default(cuid())
+  name                   String
+  email                  String      @unique
+  emailVerified          Boolean
+  image                  String 
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @default(now())
+  Sessions               Session[]
+  Account                Account?
+}
+
+model Session {
+  id                     String      @id @unique @default(cuid())
+  userId                 String      
+  token                  String      @unique
+  expiresAt              DateTime
+  ipAddress              String?
+  userAgent              String?
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @default(now())
+
+  user                   User        @relation(fields: [userId], references: [id])
+}
+
+model Account {
+  id                     String      @id @unique @default(cuid())
+  userId                 String      @unique
+  accountId              String
+  providerId             String
+  accessToken            String?
+  refreshToken           String?
+  accessTokenExpiresAt   DateTime
+  refreshTokenExpiresAt  DateTime
+  scope                  String?
+  idToken                String?
+  password               String?
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @default(now())
+
+  user                   User        @relation(fields: [userId], references: [id])
+}
+
+model Verification {
+  id                     String      @id @unique @default(cuid())
+  identifier             String
+  value                  String
+  expiresAt              DateTime
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @default(now())
+}
+
+model Ticket {
+  id                     String @id
+  ticketName             String
+  ticketCPF              String @unique
+  ticketPhoneNumber      String
+  ticketEmail            String
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @default(now())
+  paymentConfirmed       Boolean
+  valid                  Boolean  
 }
