@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-async function createPaymentLink(userData) {
+export async function createPaymentLink(userData) {
     console.log(process.env.INFINITE_PAY_HANDLE);
     const response = await axios.post("https://api.checkout.infinitepay.io/links", {
             "handle": process.env.INFINITE_PAY_HANDLE,
@@ -30,5 +30,3 @@ async function createPaymentLink(userData) {
     })
     return response.data;
 }
-
-export default createPaymentLink;

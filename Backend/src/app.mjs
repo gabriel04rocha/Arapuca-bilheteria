@@ -3,8 +3,8 @@ import checkoutRoutes from "./Routes/checkoutRoutes.js";
 import cors from "@fastify/cors"
 import dotenv from "dotenv"
 import prismaPlugin from "./plugins/prisma.ts";
-import fastifyPlugin from 'fastify-plugin';
 import { userRoutes } from "./Routes/users.ts";
+import dbRoutes from "./Routes/dbRoutes.js";
 
 dotenv.config()
 
@@ -29,5 +29,6 @@ fastify.get('/health', async (req, res) => {
 
 await fastify.register(checkoutRoutes, { prefix: 'api' })
 await fastify.register(userRoutes, { prefix: 'api' })
+await fastify.register(dbRoutes, { prefix: 'api' })
 
 export default fastify;

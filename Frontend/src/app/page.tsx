@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { CONFIG } from "@/lib/config";
-import FormComponent from "./Components/FormComponent";
+import FormComponent from "../../components/ui/FormComponent";
 import axios from "axios";
 
 type Entry = {
@@ -19,14 +19,6 @@ const fmtMoney = (v: number) =>
 
 export default function Home() {
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [pixCode, setPixCode] = useState("");
-  const [qrDataUrl, setQrDataUrl] = useState("");
-  const [pixOpen, setPixOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [msg, setMsg] = useState<{ text: string; type: "ok" | "error" } | null>(null);
-  const [copyStatus, setCopyStatus] = useState("");
   const [userData, setUserData] = useState({});
   const [editState, setEditState] = useState(true);
 
@@ -54,14 +46,12 @@ export default function Home() {
     loadEntries();
   }, [loadEntries]);
 
-  const confirmedNames = new Set(entries.map((e) => e.name));
-
   async function handleEfetuarPagamento() {
     const response = await axios.post( "http://localhost:4000/api/pagamento", 
         {
           userName: userData.name,
           userEmail: userData.email,
-          userCPF: userData.cpf,
+          userCPF: userData.cpf.replace(/\D/g, ''),
           userPhone: userData.phone
         }
       )

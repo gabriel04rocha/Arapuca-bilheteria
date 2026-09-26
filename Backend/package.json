@@ -10,7 +10,9 @@
     "fastify-plugin": "^6.0.0",
     "ngrok": "^4.3.3",
     "pg": "^8.23.0",
-    "scripts": "^0.1.0"
+    "scripts": "^0.1.0",
+    "shortid": "^2.2.17",
+    "tsx": "^4.23.15"
   },
   "type": "module",
   "scripts": {
