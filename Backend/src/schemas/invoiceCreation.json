@@ -1,0 +1,25 @@
+{
+    "$id": "invoiceSchema",
+    "title": "InvoiceUserInfo",
+    "description": "Buyer information used by the Arapuca Bilheteria Digital to create a new, unconfirmed invoice in the database.",
+    "type": "object",
+    "properties": {
+        "userName": {
+            "description": "The buyer's name.",
+            "type": "string"
+        },
+        "userEmail": {
+            "description": "The buyer's e-mail address.",
+            "type": "string"
+        },
+        "userCPF": {
+            "description": "The buyer's brazilian government ID number.",
+            "type": "string"
+        },
+        "userPhone": {
+            "description": "The buyer's phone number.",
+            "type": "string"
+        }
+    },
+    "required": [ "userName", "userEmail", "userCPF", "userPhoe" ]
+}

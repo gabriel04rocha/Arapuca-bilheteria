@@ -2,18 +2,20 @@ import Fastify from "fastify";
 import checkoutRoutes from "./Routes/checkoutRoutes.js";
 import cors from "@fastify/cors"
 import { fromNodeHeaders } from "better-auth/node"
-import { auth } from './lib/auth.ts'
-import { prisma } from "./lib/prisma.mjs"
-import { userRoutes } from "./Routes/users.ts";
+import { auth } from './lib/auth.js'
+import { prisma } from "./lib/prisma.js"
 import dbRoutes from "./Routes/dbRoutes.js";
-import { env } from "./config/env.ts"
+import { env } from "./config/env.js"
+
 
 const fastify = Fastify({
     logger: true
 });
 
+const logger = fastify.log;
+
 await fastify.register(cors, {
-  origin: "https://localhost:3000",
+  origin: env.trustedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
@@ -47,7 +49,7 @@ fastify.route({
             return reply.send(response.body ? await response.text() : null);
 
         } catch (error) {
-            fastify.log.error("Authentication Error: ", error);
+            fastify.log.error(`Authentication Error: ${error instanceof Error ? error.message : String(error)}`);
             return reply.status(500).send({
                 error: "Internal authentication error",
                 code: "AUTH_FAILURE"
@@ -66,7 +68,6 @@ fastify.get('/health', async (req, res) => {
 })
 
 await fastify.register(checkoutRoutes, { prefix: 'api' })
-await fastify.register(userRoutes, { prefix: 'api' })
 await fastify.register(dbRoutes, { prefix: 'api' })
 
 export default fastify;

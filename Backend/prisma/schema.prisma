@@ -8,7 +8,8 @@ datasource db {
 }
 
 model Ticket {
-  id                String   @id
+  id                String   @id @default(cuid())
+  confirmationId    String   @unique
   ticketName        String
   ticketCPF         String   @unique
   ticketPhoneNumber String
