@@ -1,0 +1,47 @@
+{
+    "$id": "IPCallbackData",
+    "title": "InfinitePayCallbackDataSchema",
+    "description": "The payload sent by InfinitePay's API to supply Arapuca Bilheteria's ticket invoice created earlier.",
+    "type": "object",
+    "properties": {
+        "invoice_slug": {
+            "description": "Determines the invoice's unique identification.",
+            "type": "string"
+        },
+        "amount": {
+            "description": "Determines the ticket price.",
+            "type": "integer"
+        },
+        "paid_amount": {
+            "description": "Determines the amount paid by the buyer.",
+            "type": "integer"
+        },
+        "installments": {
+            "description": "Determines how many installments did the buyer pay the amount in.",
+            "type": "integer"
+        },
+        "capture_method": {
+            "description": "Determines the payment method.",
+            "type": "string"
+        },
+        "transaction_nsu": {
+            "description": "Determines the transaction unique identifier.",
+            "type": "string"
+        },
+        "order_nsu": {
+            "description": "Determines the order unique identifier",
+            "type": "string"
+        },
+        "receipt_url": {
+            "description": "Determines the transaction receipt url.",
+            "type": "string"
+        },
+        "items": {
+            "type": "array",
+            "items": {
+                "$ref": "itemsSchema#"
+            }
+        }
+    },
+    "required": [ "invoice_slug", "amount", "paid_amount", "installments", "capture_method", "transaction_nsu", "order_nsu", "receipt_url", "items" ]
+}

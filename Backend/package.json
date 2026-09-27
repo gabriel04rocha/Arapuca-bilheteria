@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.mjs",
+    "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node src/server.mjs"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.7.6",
     "@fastify/cors": "^11.3.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "ajv": "^8.20.0",
     "approve": "^0.0.12",
     "axios": "^1.20.0",
     "better-auth": "^1.7.6",
@@ -20,14 +21,16 @@
     "fastify-plugin": "^6.0.0",
     "pg": "^8.23.0",
     "scripts": "^0.1.0",
-    "shortid": "^2.2.17"
+    "shortid": "^2.2.17",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
+    "@types/shortid": "^2.2.0",
+    "ngrok": "^4.3.3",
     "prisma": "^7.10.0",
     "tsx": "^4.23.15",
-    "typescript": "^5.0.0",
-    "ngrok": "^4.3.3"
+    "typescript": "^5.0.0"
   }
 }

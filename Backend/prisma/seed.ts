@@ -1,11 +1,12 @@
-import fastify from "../src/app.mjs";
+import fastify from "../src/app.js";
+import crypto from "crypto";
 import shortid from "shortid";
 
 async function main() {
     await fastify.prisma.ticket.createMany({
         data: [
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Gabriel Rocha",
                 ticketCPF: "06972085160",
                 ticketPhoneNumber: "61982403742",
@@ -15,7 +16,7 @@ async function main() {
                 valid: true
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Lucas Almeida",
                 ticketCPF: "12345678901",
                 ticketPhoneNumber: "61987654321",
@@ -25,7 +26,7 @@ async function main() {
                 valid: false
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Mariana Souza",
                 ticketCPF: "23456789012",
                 ticketPhoneNumber: "61991234567",
@@ -35,7 +36,7 @@ async function main() {
                 valid: true
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Pedro Henrique",
                 ticketCPF: "34567890123",
                 ticketPhoneNumber: "61999876543",
@@ -45,7 +46,7 @@ async function main() {
                 valid: false
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Ana Clara Martins",
                 ticketCPF: "45678901234",
                 ticketPhoneNumber: "61992345678",
@@ -55,7 +56,7 @@ async function main() {
                 valid: true
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Rafael Oliveira",
                 ticketCPF: "56789012345",
                 ticketPhoneNumber: "61993456789",
@@ -65,7 +66,7 @@ async function main() {
                 valid: false
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Juliana Costa",
                 ticketCPF: "67890123456",
                 ticketPhoneNumber: "61994567890",
@@ -75,7 +76,7 @@ async function main() {
                 valid: true
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Matheus Santos",
                 ticketCPF: "78901234567",
                 ticketPhoneNumber: "61995678901",
@@ -85,7 +86,7 @@ async function main() {
                 valid: false
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "Beatriz Ferreira",
                 ticketCPF: "89012345678",
                 ticketPhoneNumber: "61996789012",
@@ -95,7 +96,7 @@ async function main() {
                 valid: true
             },
             {
-                id: shortid.generate(),
+                confirmationId: shortid.generate(),
                 ticketName: "João Victor Lima",
                 ticketCPF: "90123456789",
                 ticketPhoneNumber: "61997890123",

@@ -1,7 +1,7 @@
-import fastify from "./app.mjs";
-import { env } from "./config/env.ts"
+import fastify from "./app.js";
+import { env } from "./config/env.js"
 
-const PORT = env.port || 4000;
+const PORT = env.port;
 
 try {
     await fastify.listen({port: PORT, host: "0.0.0.0"});

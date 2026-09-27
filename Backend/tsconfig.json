@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "preserve",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "types": [
       "node"
@@ -10,9 +10,12 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "./src"
   },
   "include": [
-    "**/*.ts"
-, "seed.js"  ]
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "prisma/seed.js" 
+  ]
 }
