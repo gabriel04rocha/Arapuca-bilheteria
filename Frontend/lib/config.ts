@@ -8,6 +8,6 @@ export const CONFIG = {
     horario: "20h",
     local: "Local a definir",
     cidade: "Cidade a definir",
-    valor: 50.0, // valor do ingresso em reais
+    valor: 15.0, // valor do ingresso em reais
   },
 };
