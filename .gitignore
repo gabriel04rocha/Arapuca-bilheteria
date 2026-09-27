@@ -1,1 +1,32 @@
-backend/node_modules/
+# Dependencies
+node_modules/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+.env*.local
+
+# Build / generated files
+dist/
+.next/
+out/
+generated/prisma/
+
+# Local Neon
+.neon/
+
+# Local agent / AI tool files
+.agents/
+.claude/
+.cursor/
+.devin/
+.windsurf/
+
+# Local data / uploads
+data/*.json
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Logs
+npm-debug.log*
