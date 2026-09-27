@@ -1,30 +1,33 @@
 {
+  "name": "arapuca-bilheteria-API",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.mjs",
+    "build": "tsc",
+    "start": "node src/server.mjs"
+  },
   "dependencies": {
+    "@better-auth/prisma-adapter": "^1.7.6",
     "@fastify/cors": "^11.3.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "approve": "^0.0.12",
     "axios": "^1.20.0",
+    "better-auth": "^1.7.6",
     "dotenv": "^18.0.3",
     "fastify": "^5.12.5",
     "fastify-plugin": "^6.0.0",
-    "ngrok": "^4.3.3",
     "pg": "^8.23.0",
     "scripts": "^0.1.0",
-    "shortid": "^2.2.17",
-    "tsx": "^4.23.15"
-  },
-  "type": "module",
-  "scripts": {
-    "postinstall": "prisma skills sync || exit 0",
-    "contract:emit": "prisma contract emit"
-  },
-  "allowScripts": {
-    "ngrok@5.0.0-beta.2": true
+    "shortid": "^2.2.17"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
-    "prisma": "^7.10.0"
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.0.0",
+    "ngrok": "^4.3.3"
   }
 }

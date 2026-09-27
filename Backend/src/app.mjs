@@ -1,24 +1,62 @@
 import Fastify from "fastify";
 import checkoutRoutes from "./Routes/checkoutRoutes.js";
 import cors from "@fastify/cors"
-import dotenv from "dotenv"
-import prismaPlugin from "./plugins/prisma.ts";
+import { fromNodeHeaders } from "better-auth/node"
+import { auth } from './lib/auth.ts'
+import { prisma } from "./lib/prisma.mjs"
 import { userRoutes } from "./Routes/users.ts";
 import dbRoutes from "./Routes/dbRoutes.js";
-
-dotenv.config()
+import { env } from "./config/env.ts"
 
 const fastify = Fastify({
     logger: true
 });
 
 await fastify.register(cors, {
-origin: process.env.FRONTEND_URL,
-methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-allowedHeaders: ['Content-Type', 'Authorization']
+  origin: "https://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With"
+  ],
+  credentials: true,
+  maxAge: 86400
 });
 
-await fastify.register(prismaPlugin);
+fastify.route({
+    method: ["GET", "POST"],
+    url: "/api/auth/*",
+    async handler(request, reply) {
+        try {
+
+            const url = new URL(request.url, `http://${request.headers.host}`);
+
+            const headers = fromNodeHeaders(request.headers);
+
+            const req = new Request(url.toString(), {
+                method: request.method,
+                headers,
+                ...(request.body ? { body: JSON.stringify(request.body) } : {})
+            });
+
+            const response = await auth.handler(req);
+
+            reply.status(response.status);
+            response.headers.forEach((value, key) => reply.header(key, value));
+            return reply.send(response.body ? await response.text() : null);
+
+        } catch (error) {
+            fastify.log.error("Authentication Error: ", error);
+            return reply.status(500).send({
+                error: "Internal authentication error",
+                code: "AUTH_FAILURE"
+            });
+        }
+    }
+})
+
+fastify.decorate("prisma", prisma)
 
 fastify.get('/health', async (req, res) => {
     return {

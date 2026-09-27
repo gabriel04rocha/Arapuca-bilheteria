@@ -33,3 +33,14 @@ export const getTicketsByConfirmedStatus = async () => {
     })
     return tickets
 }
+
+export const getTicketById = async (userCPF) => {
+    const tickets = await fastify.prisma.ticket.findUnique({
+        where: {
+            ticketCPF: userCPF
+        }
+    })
+    if (tickets) {
+            return tickets
+    }
+}
