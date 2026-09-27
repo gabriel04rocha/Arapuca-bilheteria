@@ -1,0 +1,21 @@
+{
+    "$id": "itemsSchema",
+    "title": "InfinitePayItems",
+    "description": "Describes the structure of a payload containing a infinitePay item.",
+    "type": "object",
+    "properties": {
+        "quantity": {
+            "description": "Describes the quantity of the item bought",
+            "type": "integer"
+        },
+        "price": {
+            "description": "Describes the price of the item bought",
+            "type": "integer"
+        },
+        "description": {
+            "description": "Description of the item bought",
+            "type": "string"
+        }
+    },
+    "required": [ "quantity", "price", "description" ]
+}

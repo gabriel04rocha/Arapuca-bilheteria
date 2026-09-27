@@ -1,8 +1,13 @@
 import axios from "axios";
-import { env } from "../config/env.ts"
+import { env } from "../config/env.js"
+import { userReceivedInfo } from "../types/internalDataTypes.js";
 
-export async function createPaymentLink(userData) {
-    const response = await axios.post("https://api.checkout.infinitepay.io/links", {
+type CreatePaymentLinkResponse = {
+    url: string;
+}
+
+export async function createPaymentLink(userData: userReceivedInfo): Promise<CreatePaymentLinkResponse> {
+    const response = await axios.post<CreatePaymentLinkResponse>("https://api.checkout.infinitepay.io/links", {
             "handle": env.infinitePayHandle,
             "items": [
                 {
@@ -24,6 +29,8 @@ export async function createPaymentLink(userData) {
             console.log(error.response.status);
             console.log(error.response.headers);
         }
+
+        throw error
     })
     return response.data;
 }
