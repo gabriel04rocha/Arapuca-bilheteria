@@ -1,15 +1,12 @@
-import { FastifyInstance } from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import { getDbTicketById } from "../Controllers/checkoutController.js";
 import { getDbTicketsByPaymentStatus } from "../Controllers/dbController.js";
+import userSignup from "../schemas/userSignup.json" with { type: "json" };
 
 const dbRoutes = (app: FastifyInstance) => {
-    app.get('/confirmed-guests', async (request, reply) => {
-        return await getDbTicketsByPaymentStatus();
-    })
+  app.addSchema(userSignup);
 
-    app.get<{ Querystring: { userCPF: string } }>('/tickets', async (request, reply) => {
-        return await getDbTicketById(request.query.userCPF);
-    })
-}
+  app.get("/confirmed-guests", getDbTicketsByPaymentStatus);
+};
 
 export default dbRoutes;

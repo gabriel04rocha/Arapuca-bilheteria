@@ -7,23 +7,39 @@ datasource db {
   provider = "postgresql"
 }
 
+model Invoice {
+  id                   String @id @default(cuid())
+  price                Int
+  orderNsu             String @unique
+  invoiceSlug          String? @unique
+  transactionNsu       String? @unique
+  receiptUrl           String?
+  ticket               Ticket?
+  customerName         String
+  customerCPF          String @unique
+  customerPhoneNumber  String
+  customerEmail        String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  paymentConfirmed     Boolean
+}
+
 model Ticket {
   id                String   @id @default(cuid())
   confirmationId    String   @unique
-  ticketName        String
-  ticketCPF         String   @unique
-  ticketPhoneNumber String
-  ticketEmail       String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @default(now())
-  paymentConfirmed  Boolean
+  invoiceId         String   @unique
   valid             Boolean
+  invoice           Invoice @relation(fields: [invoiceId], references: [id])
 }
 
 model User {
   id            String    @id
   name          String
   email         String
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
@@ -37,13 +53,14 @@ model User {
 
 model Session {
   id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
+  expiresAt       DateTime
+  token           String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  ipAddress       String?
+  userAgent       String?
+  userId          String
+  impersonatedBy  String?
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])

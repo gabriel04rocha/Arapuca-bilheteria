@@ -4,18 +4,12 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "outDir": "dist",
     "rootDir": "./src"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "prisma/seed.js" 
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "prisma/seed.js"]
 }

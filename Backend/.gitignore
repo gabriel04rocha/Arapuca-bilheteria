@@ -1,10 +1,10 @@
 .neon
-node_modules/
+node_modules
 .env
 .env.*
 !.env.example
 /generated/prisma
-dist/
+dist
 .agents/
 .claude/
 .cursor/

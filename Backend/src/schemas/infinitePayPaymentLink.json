@@ -1,0 +1,13 @@
+{
+  "$id": "IPPaymentLinkSchema",
+  "title": "Infinite Pay Payment Link Schema",
+  "description": "Describes the JSON schema for the Infinite Pay Payment Link payload.",
+  "type": "object",
+  "properties": {
+    "url": {
+      "description": "the URL for the payment link.",
+      "type": "string"
+    }
+  },
+  "required": ["url"]
+}

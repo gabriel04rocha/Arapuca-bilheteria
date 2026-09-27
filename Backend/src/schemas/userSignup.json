@@ -1,0 +1,24 @@
+{
+  "$id": "userSignupSchema",
+  "title": "User Signup Payload Schema",
+  "description": "Describes the schema for the json payload sent by Arapuca Bilheteria's front end.",
+  "type": "object",
+  "properties": {
+    "email": {
+      "description": "The user's email address.",
+      "type": "string"
+    },
+    "name": {
+      "description": "the user's name.",
+      "type": "string"
+    },
+    "password": {
+      "description": "the user's password",
+      "type": "string"
+    },
+    "role": {
+      "description": "the user's assigned role",
+      "type": "string"
+    }
+  }
+}

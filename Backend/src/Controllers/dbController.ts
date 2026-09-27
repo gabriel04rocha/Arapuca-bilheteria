@@ -1,6 +1,54 @@
-import { getTicketsByConfirmedStatus } from "../Services/dbService.js"
+import { getTicketsByConfirmedStatus } from "../Services/dbService.js";
+import { userReceivedInfo } from "../types/internalDataTypes.js";
+import { createInvoice } from "../Services/dbService.js";
+import { dbError } from "../errors/dbError.js";
+import fastify, { FastifyReply, FastifyRequest } from "fastify";
+import type { userSignupInfo } from "../types/internalDataTypes.js";
+import { auth } from "../lib/auth.js";
+import { appError } from "../errors/appError.js";
 
-export const getDbTicketsByPaymentStatus = async () => {
+export const getDbTicketsByPaymentStatus = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const userId = await auth.api.getUser();
+
+    const { success } = await auth.api.userHasPermission({
+      body: {
+        userId: userId.id,
+        permissions: { project: ["read_guests"] },
+      },
+    });
+
+    if (!success) {
+      throw new appError({
+        name: "USER_DOES_NOT_HAVE_PERMISSION",
+        message:
+          "O usuário logado não possui permissão para acessar este recurso.",
+        statusCode: 401,
+      });
+    }
+
     const tickets = await getTicketsByConfirmedStatus();
-    return tickets;
-}
+    console.log(tickets);
+    return reply.status(200).send(tickets);
+  } catch (error) {
+    if (error instanceof appError) {
+      return reply
+        .status(401)
+        .send({ error: error.name, message: error.message });
+    }
+
+    if (error instanceof dbError) {
+      return reply
+        .status(404)
+        .send({ error: error.name, message: error.message });
+    }
+
+    return reply.status(500).send({
+      error: "INTERNAL_SERVER_ERROR",
+      message: "Erro interno do servidor.",
+    });
+  }
+};

@@ -5,4 +5,8 @@ declare module "fastify" {
   interface FastifyInstance {
     prisma: PrismaClient;
   }
+  interface FastifyRequest {
+    user: typeof auth.$Infer.Session.user;
+    session: typeof auth.$Infer.Session.session;
+  }
 }

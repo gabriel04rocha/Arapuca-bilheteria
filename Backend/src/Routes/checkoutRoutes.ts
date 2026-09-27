@@ -1,30 +1,40 @@
-import {getPaymentLink, createDbInvoice, confirmDbPayment } from "../Controllers/checkoutController.js";
+import {
+  getPaymentLink,
+  confirmPayment,
+} from "../Controllers/checkoutController.js";
 import { FastifyInstance } from "fastify";
-import { userReceivedInfo } from "../types/internalDataTypes.js";
-import { infinitePayCallbackData } from "../types/infinitePayTypes.js";
 import infinitePayCallbackDataSchema from "../schemas/infinitePayCallbackData.json" with { type: "json" };
 import infinitePayItemSchema from "../schemas/infinitePayItemSchema.json" with { type: "json" };
+import invoiceCreationSchema from "../schemas/invoiceCreation.json" with { type: "json" };
 
 async function checkoutRoutes(app: FastifyInstance) {
-    app.addSchema(infinitePayItemSchema);
-    app.addSchema(infinitePayCallbackDataSchema);
+  app.addSchema(infinitePayItemSchema);
+  app.addSchema(infinitePayCallbackDataSchema);
+  app.addSchema(invoiceCreationSchema);
 
-    app.post<{ Body: userReceivedInfo }>('/pagamento', async (request, reply) => {
-        const paymentLink = await getPaymentLink(request.body);
-        await createDbInvoice(request.body);
-        return paymentLink;
-    })
+  app.post(
+    "/pagamento",
+    {
+      schema: {
+        body: {
+          $ref: "invoiceSchema#",
+        },
+      },
+    },
+    getPaymentLink,
+  );
 
-    app.post<{ Body: infinitePayCallbackData }>('/webhook-infinitepay', {
-        schema: {
-            body: {
-                "$ref": "IPCallbackData#"
-            }
-        }
-    }, async (request, reply) => {
-        console.log("rodou!")
-        await confirmDbPayment(request.body);
-    })
+  app.post(
+    "/webhook-infinitepay",
+    {
+      schema: {
+        body: {
+          $ref: "IPCallbackData#",
+        },
+      },
+    },
+    confirmPayment,
+  );
 }
 
-export default checkoutRoutes
+export default checkoutRoutes;
