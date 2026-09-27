@@ -3,6 +3,7 @@
 import { Field, FieldLabel, FieldSet, } from "@/components/ui/field"
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Input } from "@/components/ui/input";
+import { submittedUserdata } from "@/src/app/page";
 import { Button } from "@/components/ui/button"
 
 type Inputs = {
@@ -12,12 +13,15 @@ type Inputs = {
     cpf: string;
 }
 
-const FormComponent = ({ submitToParent }) => {
+type formComponentProps = {
+    submitToParent: (data: submittedUserdata) => void
+}
+
+const FormComponent = ({ submitToParent }: formComponentProps ) => {
 
     const {
         register,
         handleSubmit,
-        watch,
         setValue,
         formState: { errors },
     } = useForm<Inputs>();
@@ -27,7 +31,7 @@ const FormComponent = ({ submitToParent }) => {
         submitToParent(data);
     }
     
-    const handleChangePhoneNumber = (e) => {
+    const handleChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
         const valor = e.target.value
         .replace(/\D/g, '')
         .replace(/^(\d{2})(\d)/g, "($1) $2")
@@ -58,7 +62,7 @@ const FormComponent = ({ submitToParent }) => {
             firstVerifier = 11 - (digitsSum % 11);
         }
         
-        filteredCPFList.push(firstVerifier);
+        filteredCPFList.push(firstVerifier.toString());
         
         counter = 11;
         
@@ -76,16 +80,14 @@ const FormComponent = ({ submitToParent }) => {
             secondVerifier = 11 - (digitsSum % 11);
         }
         
-        filteredCPFList.push(secondVerifier)
+        filteredCPFList.push(secondVerifier.toString())
         
         console.log(filteredCPF + "\n" + filteredCPFList.join(""))
         
         return filteredCPFList.join("") == filteredCPF;
     }
     
-    const handleChangeCpf = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleChangeCpf = (e: React.ChangeEvent<HTMLInputElement>) => {
         const valor = e.target.value
         .replace(/\D/g, '')
         .replace(/(\d{3})(\d)/, '$1.$2')

@@ -1,56 +1,37 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import qs from "qs"
+import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CONFIG } from "@/lib/config";
 import FormComponent from "../../components/ui/FormComponent";
 import axios from "axios";
 
-type Entry = {
-  id: string;
-  name: string;
-  fileName: string;
-  fileType: string;
-  filePath: string;
-  submittedAt: string;
-};
-
-const fmtMoney = (v: number) =>
-  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+export type submittedUserdata = {
+    name: string;
+    phone: string;
+    email: string;
+    cpf: string;
+}
 
 export default function Home() {
-  const [isLeaving, setIsLeaving] = useState(false)
-  const [alertSwitch, setAlertSwitch] = useState(true)
-  const [isAlertVisible, setIsAlertVisible] = useState(false)
-  const [userData, setUserData] = useState({});
+  // const [isLeaving, setIsLeaving] = useState(false)
+  // const [alertSwitch, setAlertSwitch] = useState(true)
+  // const [isAlertVisible, setIsAlertVisible] = useState(false)
+  const [userData, setUserData] = useState<submittedUserdata>({ name: '', phone: '', email: '', cpf: '' });
   const [editState, setEditState] = useState(true);
 
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = (data: submittedUserdata) => {
     setUserData(data);
     setEditState(false);
   }
 
   const handleEditClick = () => {
-    setUserData({});
+    setUserData({ name: '', phone: '', email: '', cpf: '' });
     setEditState(true);
   }
 
   async function handleEfetuarPagamento() {
-    const ticketExists = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets?`, {
-      params: {
-        userCPF: userData.cpf.replace(/\D/g, '')
-      },
-      paramsSerializer: params => {
-        return qs.stringify(params)
-      }
-    })
 
-    if (ticketExists) {
-      alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true)
-      console.log("AlerIsVisible = true")
-      setIsAlertVisible(true);
-    } else {
       const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/api/pagamento`, 
           {
             userName: userData.name,
@@ -60,40 +41,38 @@ export default function Home() {
           }
         )
       window.location.replace(response.data.url);
-    }
 
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const exitTimer = setTimeout(() => {
-      console.log("isLeaving = true")
-      setIsLeaving(true);
-    }, 5000)
+  //   const exitTimer = setTimeout(() => {
+  //     console.log("isLeaving = true")
+  //     setIsLeaving(true);
+  //   }, 5000)
     
-    const removeTimer = setTimeout(() => {
-      console.log("alertIsVisible = false")
-      setIsAlertVisible(false);
-    }, 5300)
+  //   const removeTimer = setTimeout(() => {
+  //     console.log("alertIsVisible = false")
+  //     setIsAlertVisible(false);
+  //   }, 5300)
     
-    const clearState = setTimeout(() => {
-      console.log("isLeaving = false")
-      setIsLeaving(false);
-    }, 5350)
+  //   const clearState = setTimeout(() => {
+  //     console.log("isLeaving = false")
+  //     setIsLeaving(false);
+  //   }, 5350)
 
-    return () => {
-      clearTimeout(exitTimer);
-      clearTimeout(removeTimer);
-      clearTimeout(clearState);
-    }
+  //   return () => {
+  //     clearTimeout(exitTimer);
+  //     clearTimeout(removeTimer);
+  //     clearTimeout(clearState);
+  //   }
     
-  }, [alertSwitch])
+  // }, [alertSwitch])
 
   return (
     <div className="wrap">
       <div className="hero flex flex-col justify-center items-center">
         <img src="/logo.png" alt="Arapuca" />
-        <p className="lede">{CONFIG.convite}</p>
       </div>
 
       <div className="stats">
@@ -111,7 +90,7 @@ export default function Home() {
         </div>
         <div className="stat">
           <div className="label">Ingresso</div>
-          <div className="value">{fmtMoney(CONFIG.evento.valor)}</div>
+          <div className="value">{`R$${CONFIG.evento.valor},00`}</div>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -150,7 +129,7 @@ export default function Home() {
           <h2 className="step-title">Pagamento</h2>
         </div>
         <p className="step-sub">
-          Clique no botão abaixo para efetuar o pagamento do ingresso. Só é permitido pagar através do pix.
+          Clique no botão abaixo para efetuar o pagamento do ingresso.
         </p>
         <div className="panel">
           <button className="action" onClick={handleEfetuarPagamento}>
@@ -158,15 +137,14 @@ export default function Home() {
           </button>
         </div>
       </section>}
-
-      {isAlertVisible && <Alert className={`
+      {/* {isAlertVisible && <Alert className={`
         transition-all ease-in-out duration-300 fixed bottom-[10%] left-[25%] md:left-[70%]
         ${!isLeaving ? " animate-in fade-in slide-in-from-right-2" : ''}
         ${isLeaving ? " animate-out fade-out slide-out-to-top2" : ''}
         `}>
         <AlertTitle>Erro!</AlertTitle>
         <AlertDescription>Já existe um ingresso cadastrado no CPF inserido. Por favor, mude o CPF.</AlertDescription>
-      </Alert>}
+      </Alert>} */}
       </div>
 
       <footer>Arapuca, bilheteria online</footer>
