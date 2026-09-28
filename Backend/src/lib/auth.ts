@@ -3,7 +3,7 @@ import { prismaAdapter } from "@better-auth/prisma-adapter";
 import { prisma } from "./prisma.js";
 import { env } from "../config/env.js";
 import { admin as adminPlugin } from "better-auth/plugins";
-import { ac, user } from "../config/permissions.js";
+import { ac, user, admin } from "../config/permissions.js";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -23,6 +23,7 @@ export const auth = betterAuth({
       ac,
       roles: {
         user,
+        admin,
       },
     }),
   ],

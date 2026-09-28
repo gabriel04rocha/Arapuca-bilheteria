@@ -14,9 +14,10 @@ export type submittedUserdata = {
 };
 
 export default function Home() {
-  // const [isLeaving, setIsLeaving] = useState(false)
-  // const [alertSwitch, setAlertSwitch] = useState(true)
-  // const [isAlertVisible, setIsAlertVisible] = useState(false)
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [alertSwitch, setAlertSwitch] = useState(true);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [userData, setUserData] = useState<submittedUserdata>({
     name: "",
     phone: "",
@@ -36,42 +37,59 @@ export default function Home() {
   };
 
   async function handleEfetuarPagamento() {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/pagamento`,
-      {
-        userName: userData.name,
-        userEmail: userData.email,
-        userCPF: userData.cpf.replace(/\D/g, ""),
-        userPhone: userData.phone,
-      },
-    );
-    window.location.replace(response.data.url);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/pagamento`,
+        {
+          userName: userData.name,
+          userEmail: userData.email,
+          userCPF: userData.cpf.replace(/\D/g, ""),
+          userPhone: userData.phone,
+        },
+      );
+      window.location.replace(response.data.url);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+          setIsAlertVisible(true);
+          setAlertMessage(
+            "Já existe um ingresso cadastrado no CPF inserido. Por favor, mude o CPF.",
+          );
+          return;
+        }
+
+        if (error.response?.status === 500) {
+          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+          setIsAlertVisible(true);
+          setAlertMessage("Erro interno do servidor.");
+        }
+      }
+    }
   }
 
-  // useEffect(() => {
+  useEffect(() => {
+    const exitTimer = setTimeout(() => {
+      console.log("isLeaving = true");
+      setIsLeaving(true);
+    }, 5000);
 
-  //   const exitTimer = setTimeout(() => {
-  //     console.log("isLeaving = true")
-  //     setIsLeaving(true);
-  //   }, 5000)
+    const removeTimer = setTimeout(() => {
+      console.log("alertIsVisible = false");
+      setIsAlertVisible(false);
+    }, 5300);
 
-  //   const removeTimer = setTimeout(() => {
-  //     console.log("alertIsVisible = false")
-  //     setIsAlertVisible(false);
-  //   }, 5300)
+    const clearState = setTimeout(() => {
+      console.log("isLeaving = false");
+      setIsLeaving(false);
+    }, 5350);
 
-  //   const clearState = setTimeout(() => {
-  //     console.log("isLeaving = false")
-  //     setIsLeaving(false);
-  //   }, 5350)
-
-  //   return () => {
-  //     clearTimeout(exitTimer);
-  //     clearTimeout(removeTimer);
-  //     clearTimeout(clearState);
-  //   }
-
-  // }, [alertSwitch])
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+      clearTimeout(clearState);
+    };
+  }, [alertSwitch]);
 
   return (
     <div className="wrap">
@@ -155,14 +173,18 @@ export default function Home() {
             </div>
           </section>
         )}
-        {/* {isAlertVisible && <Alert className={`
+        {isAlertVisible && (
+          <Alert
+            className={`
         transition-all ease-in-out duration-300 fixed bottom-[10%] left-[25%] md:left-[70%]
-        ${!isLeaving ? " animate-in fade-in slide-in-from-right-2" : ''}
-        ${isLeaving ? " animate-out fade-out slide-out-to-top2" : ''}
-        `}>
-        <AlertTitle>Erro!</AlertTitle>
-        <AlertDescription>Já existe um ingresso cadastrado no CPF inserido. Por favor, mude o CPF.</AlertDescription>
-      </Alert>} */}
+        ${!isLeaving ? " animate-in fade-in slide-in-from-right-2" : ""}
+        ${isLeaving ? " animate-out fade-out slide-out-to-top2" : ""}
+        `}
+          >
+            <AlertTitle>Erro!</AlertTitle>
+            <AlertDescription>{alertMessage}</AlertDescription>
+          </Alert>
+        )}
       </div>
 
       <footer>Arapuca, bilheteria online</footer>

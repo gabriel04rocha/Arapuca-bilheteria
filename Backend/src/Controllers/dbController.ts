@@ -6,17 +6,21 @@ import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import type { userSignupInfo } from "../types/internalDataTypes.js";
 import { auth } from "../lib/auth.js";
 import { appError } from "../errors/appError.js";
+import { fromNodeHeaders } from "better-auth/node";
 
 export const getDbTicketsByPaymentStatus = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
   try {
-    const userId = await auth.api.getUser();
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(request.headers),
+    });
 
+    console.log("antes de TUDO!");
     const { success } = await auth.api.userHasPermission({
       body: {
-        userId: userId.id,
+        userId: session?.user.id,
         permissions: { project: ["read_guests"] },
       },
     });
@@ -31,7 +35,6 @@ export const getDbTicketsByPaymentStatus = async (
     }
 
     const tickets = await getTicketsByConfirmedStatus();
-    console.log(tickets);
     return reply.status(200).send(tickets);
   } catch (error) {
     if (error instanceof appError) {

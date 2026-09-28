@@ -33,7 +33,9 @@ export const getPaymentLink = async (
     return reply.status(200).send(paymentLink);
   } catch (error) {
     if (error instanceof appError) {
-      return reply.status(409).send({ message: error.message });
+      return reply
+        .status(409)
+        .send({ error: error.name, message: error.message });
     }
 
     return reply.status(500).send({

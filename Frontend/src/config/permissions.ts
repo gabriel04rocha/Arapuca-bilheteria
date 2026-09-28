@@ -21,6 +21,6 @@ export const user = ac.newRole({
 });
 
 export const admin = ac.newRole({
-  project: [],
+  project: ["read_guests"],
   ...adminAc.statements,
 });

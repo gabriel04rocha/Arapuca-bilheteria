@@ -14,7 +14,6 @@ import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { check, Session } from "better-auth";
 
 export default function guestListPage() {
   type guestTicketInformation = {
@@ -31,7 +30,7 @@ export default function guestListPage() {
 
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [alertSwitch, setAlertSwitch] = useState(false);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,7 +41,6 @@ export default function guestListPage() {
 
   useEffect(() => {
     async function loadPage() {
-      setLoading(true);
       try {
         async function checkAuth() {
           const { data: session, error } = await authClient.getSession();
@@ -63,9 +61,21 @@ export default function guestListPage() {
           permissions: { project: ["read_guests"] },
         });
 
+        if (error) {
+          triggerAlert(
+            "Não foi possível verificar as permissões do seu usuário.",
+          );
+        }
+
         if (!data?.success) {
           router.replace("/login");
           return;
+        }
+
+        function triggerAlert(alertMessage: string) {
+          setIsAlertVisible(true);
+          setErrorMessage(alertMessage);
+          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
         }
 
         async function loadGuests() {
@@ -86,19 +96,13 @@ export default function guestListPage() {
               }
 
               if (error.response?.status === 403) {
-                setIsAlertVisible(true);
-                alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
-                setErrorMessage(
+                triggerAlert(
                   "Você não tem permissão para acessar esta página.",
                 );
                 return;
               }
 
-              setIsAlertVisible(true);
-              alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
-              setErrorMessage(
-                "Não foi possível carregar a lista de convidados.",
-              );
+              triggerAlert("Não foi possível carregar a lista de convidados.");
               return;
             }
 
@@ -217,7 +221,9 @@ export default function guestListPage() {
                           "$1.$2.$3-$4",
                         )}
                       </TableCell>
-                      <TableCell>{item.valid ? "Sim" : "Não"}</TableCell>
+                      <TableCell className="text-left">
+                        {item.valid ? "Sim" : "Não"}
+                      </TableCell>
                     </TableRow>
                   );
                 })}

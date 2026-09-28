@@ -13,7 +13,10 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/src/lib/auth-client";
+import { useState, useEffect } from "react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   name: string;
@@ -23,7 +26,52 @@ type Inputs = {
 };
 
 export default function loginPage() {
-  axios.get("http://localhost:4000/api/user-signup");
+  const [alertSwitch, setAlertSwitch] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<String | undefined>("");
+  const [isLeaving, setIsLeaving] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkRole() {
+      try {
+        const session = await authClient.getSession();
+        if (session.data?.user.role !== "admin") {
+          router.replace("/login");
+          return;
+        }
+        setLoading(false);
+      } catch (error) {
+        router.replace("/login");
+        return;
+      }
+    }
+    checkRole();
+  }, [router]);
+
+  useEffect(() => {
+    const exitTimer = setTimeout(() => {
+      console.log("isLeaving = true");
+      setIsLeaving(true);
+    }, 5000);
+
+    const removeTimer = setTimeout(() => {
+      console.log("alertIsVisible = false");
+      setIsAlertVisible(false);
+    }, 5300);
+
+    const clearState = setTimeout(() => {
+      console.log("isLeaving = false");
+      setIsLeaving(false);
+    }, 5350);
+
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+      clearTimeout(clearState);
+    };
+  }, [alertSwitch]);
 
   const {
     register,
@@ -41,8 +89,35 @@ export default function loginPage() {
       role: formData.role,
     });
 
-    console.log(error);
+    if (error) {
+      switch (error.code) {
+        case "PASSWORD_TOO_SHORT":
+          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+          setErrorMessage("A senha é muito curta.");
+          setIsAlertVisible(true);
+          break;
+        case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
+          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+          setErrorMessage("Já existe um usuário com este e-mail. Use outro.");
+          setIsAlertVisible(true);
+          break;
+        default:
+          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+          setErrorMessage(error.message);
+          console.log(error.code);
+          setIsAlertVisible(true);
+          break;
+      }
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <img src="/loading-icon.gif" width="50px" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen flex flex-col md:flex-row justify-center items-end bg-gray">
@@ -136,6 +211,19 @@ export default function loginPage() {
           <img src="/logo.png" alt="Arapuca" className="w-[20%]" />
         </div>
       </div>
+      {isAlertVisible && (
+        <Alert
+          className={`
+        transition-all ease-in-out duration-300 fixed bottom-[10%] left-[25%] md:left-[70%]
+        ${!isLeaving ? " animate-in fade-in slide-in-from-right-2" : ""}
+        ${isLeaving ? " animate-out fade-out slide-out-to-top2" : ""}
+        `}
+          variant="destructive"
+        >
+          <AlertTitle>Erro!</AlertTitle>
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 }
