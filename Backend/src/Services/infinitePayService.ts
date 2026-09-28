@@ -31,7 +31,7 @@ export async function createPaymentLink(
             description: "Ingresso Arapuca",
           },
         ],
-        order_nsu: userData.userCPF,
+        order_nsu: orderNsu,
         customer: {
           name: userData.userName,
           email: userData.userEmail,

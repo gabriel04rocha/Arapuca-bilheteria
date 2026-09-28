@@ -43,51 +43,64 @@ export const createInvoice = async (
 export const confirmInvoicePayment = async (
   payloadData: infinitePayCallbackData,
 ) => {
-  const invoice = await fastify.prisma.invoice.findUnique({
-    where: { orderNsu: payloadData.order_nsu },
-  });
-
-  if (!invoice) {
-    throw new appError({
-      name: "INVOICE_NOT_FOUND",
-      statusCode: 404,
-      message: "Não foi encontrada uma invoice para este pedido.",
+  await fastify.prisma.$transaction(async (prisma) => {
+    const invoice = await prisma.invoice.findUnique({
+      where: { orderNsu: payloadData.order_nsu },
     });
-  }
 
-  if (invoice.price !== payloadData.amount) {
-    throw new appError({
-      name: "INVALID_PAYMENT_AMOUNT",
-      statusCode: 400,
-      message: "O valor de pagamento diverge do valor da invoice selecionada.",
-    });
-  }
-
-  const updatedInvoice = await fastify.prisma.invoice.update({
-    where: { orderNsu: payloadData.order_nsu },
-    data: { paymentConfirmed: true },
-  });
-
-  try {
-    await fastify.prisma.ticket.create({
-      data: {
-        confirmationId: shortid.generate(),
-        invoiceId: updatedInvoice.id,
-        valid: true,
-      },
-    });
-  } catch (error) {
-    if (
-      error instanceof PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
+    if (!invoice) {
       throw new appError({
-        name: "TICKET_ALREADY_EXISTS",
-        statusCode: 409,
-        message: "Já existe um ingresso cadastrado neste CPF.",
+        name: "INVOICE_NOT_FOUND",
+        statusCode: 404,
+        message: "Não foi encontrada uma invoice para este pedido.",
       });
     }
-  }
+
+    if (invoice.price !== payloadData.amount) {
+      throw new appError({
+        name: "INVALID_PAYMENT_AMOUNT",
+        statusCode: 400,
+        message:
+          "O valor de pagamento diverge do valor da invoice selecionada.",
+      });
+    }
+
+    if (invoice.paymentConfirmed) {
+      const ticket = await prisma.ticket.findUnique({
+        where: { invoiceId: invoice.id },
+      });
+
+      if (ticket && invoice.transactionNsu === payloadData.transaction_nsu) {
+        return;
+      }
+    }
+
+    const updatedInvoice = await prisma.invoice.update({
+      where: { orderNsu: payloadData.order_nsu },
+      data: { paymentConfirmed: true },
+    });
+
+    try {
+      await prisma.ticket.create({
+        data: {
+          confirmationId: shortid.generate(),
+          invoiceId: updatedInvoice.id,
+          valid: true,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new appError({
+          name: "TICKET_ALREADY_EXISTS",
+          statusCode: 409,
+          message: "Já existe um ingresso cadastrado neste CPF.",
+        });
+      }
+    }
+  });
 };
 
 export const getTicketsByConfirmedStatus = async () => {

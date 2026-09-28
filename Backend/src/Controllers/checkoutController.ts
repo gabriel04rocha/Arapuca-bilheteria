@@ -28,8 +28,8 @@ export const getPaymentLink = async (
     }
 
     const orderNsu = crypto.randomUUID();
-    const paymentLink = await createPaymentLink(request.body, orderNsu);
     await createInvoice(request.body, orderNsu);
+    const paymentLink = await createPaymentLink(request.body, orderNsu);
     return reply.status(200).send(paymentLink);
   } catch (error) {
     if (error instanceof appError) {
