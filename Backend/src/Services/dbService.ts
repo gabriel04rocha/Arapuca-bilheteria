@@ -3,7 +3,6 @@ import shortid from "shortid";
 import type { userReceivedInfo } from "../types/internalDataTypes.js";
 import { infinitePayCallbackData } from "../types/infinitePayTypes.js";
 import { env } from "../config/env.js";
-import { Prisma } from "@prisma/client";
 import { appError } from "../errors/appError.js";
 import { dbError } from "../errors/dbError.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
@@ -26,7 +25,7 @@ export const createInvoice = async (
     });
   } catch (error) {
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error instanceof PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
       throw new appError({

@@ -3,10 +3,17 @@ import { userReceivedInfo } from "../types/internalDataTypes.js";
 import { createInvoice } from "../Services/dbService.js";
 import { dbError } from "../errors/dbError.js";
 import fastify, { FastifyReply, FastifyRequest } from "fastify";
-import type { userSignupInfo } from "../types/internalDataTypes.js";
 import { auth } from "../lib/auth.js";
 import { appError } from "../errors/appError.js";
 import { fromNodeHeaders } from "better-auth/node";
+
+type guestTicketInformation = {
+  id: string;
+  confirmationId: string;
+  valid: boolean;
+  name: string;
+  phone: string;
+};
 
 export const getDbTicketsByPaymentStatus = async (
   request: FastifyRequest,
@@ -35,7 +42,7 @@ export const getDbTicketsByPaymentStatus = async (
     }
 
     const tickets = await getTicketsByConfirmedStatus();
-    const ticketsToSend = tickets.map(
+    const ticketsToSend: guestTicketInformation[] = tickets.map(
       ({ id, confirmationId, invoice, valid }) => ({
         id: id,
         confirmationId: confirmationId,
