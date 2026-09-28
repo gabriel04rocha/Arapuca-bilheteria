@@ -20,16 +20,11 @@ export default function guestListPage() {
     id: string;
     confirmationId: string;
     valid: boolean;
-    invoice: {
-      customerName: string;
-      customerCPF: string;
-      customerPhoneNumber: string;
-      customerEmail: string;
-    };
+    name: string;
+    phone: string;
   };
 
   const [userEmail, setUserEmail] = useState("");
-  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [alertSwitch, setAlertSwitch] = useState(false);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -51,10 +46,12 @@ export default function guestListPage() {
           }
           setUserEmail(session?.user.email);
 
-          setUserId(session.user.id);
+          return session.user.id;
         }
 
-        await checkAuth();
+        const userId = await checkAuth();
+
+        if (!userId) return;
 
         const { data, error } = await authClient.admin.hasPermission({
           userId: userId,
@@ -189,9 +186,7 @@ export default function guestListPage() {
                     ID de confirmação
                   </TableHead>
                   <TableHead className="text-white">Nome</TableHead>
-                  <TableHead className="text-white">E-mail</TableHead>
                   <TableHead className="text-white">Telefone</TableHead>
-                  <TableHead className="text-white">CPF</TableHead>
                   <TableHead className="text-white">Válido?</TableHead>
                 </TableRow>
               </TableHeader>
@@ -203,22 +198,11 @@ export default function guestListPage() {
                       <TableCell className="text-left">
                         {item.confirmationId}
                       </TableCell>
+                      <TableCell className="text-left">{item.name}</TableCell>
                       <TableCell className="text-left">
-                        {item.invoice.customerName}
-                      </TableCell>
-                      <TableCell className="text-left">
-                        {item.invoice.customerEmail}
-                      </TableCell>
-                      <TableCell className="text-left">
-                        {item.invoice.customerPhoneNumber.replace(
+                        {item.phone.replace(
                           /^([1-9]{2})(9\d{4})(\d{4})$/,
                           "($1) $2-$3",
-                        )}
-                      </TableCell>
-                      <TableCell className="text-left">
-                        {item.invoice.customerCPF.replace(
-                          /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
-                          "$1.$2.$3-$4",
                         )}
                       </TableCell>
                       <TableCell className="text-left">

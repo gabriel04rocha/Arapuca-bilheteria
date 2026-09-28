@@ -28,9 +28,17 @@ export const getPaymentLink = async (
     }
 
     const orderNsu = crypto.randomUUID();
-    await createInvoice(request.body, orderNsu);
     const paymentLink = await createPaymentLink(request.body, orderNsu);
-    return reply.status(200).send(paymentLink);
+    if (paymentLink) {
+      await createInvoice(request.body, orderNsu);
+      return reply.status(200).send(paymentLink);
+    } else {
+      throw new appError({
+        name: "PAYMENT_LINK_CREATION_FAILED",
+        statusCode: 500,
+        message: "Falha ao criar o link de pagamento.",
+      });
+    }
   } catch (error) {
     if (error instanceof appError) {
       return reply

@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import app from "../app.js";
+import app from "../src/app.js";
 
 let ready: Promise<void> | undefined;
 
@@ -10,6 +10,7 @@ export default async function handler(
   ready ??= (async () => {
     await app.ready();
   })();
+  await ready;
 
   app.server.emit("request", request, response);
 }

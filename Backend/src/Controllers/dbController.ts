@@ -35,7 +35,17 @@ export const getDbTicketsByPaymentStatus = async (
     }
 
     const tickets = await getTicketsByConfirmedStatus();
-    return reply.status(200).send(tickets);
+    const ticketsToSend = tickets.map(
+      ({ id, confirmationId, invoice, valid }) => ({
+        id: id,
+        confirmationId: confirmationId,
+        name: invoice.customerName,
+        phone: invoice.customerPhoneNumber,
+        valid: valid,
+      }),
+    );
+
+    return reply.status(200).send(ticketsToSend);
   } catch (error) {
     if (error instanceof appError) {
       return reply
