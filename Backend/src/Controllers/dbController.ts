@@ -7,14 +7,6 @@ import { auth } from "../lib/auth.js";
 import { appError } from "../errors/appError.js";
 import { fromNodeHeaders } from "better-auth/node";
 
-type guestTicketInformation = {
-  id: string;
-  confirmationId: string;
-  valid: boolean;
-  name: string;
-  phone: string;
-};
-
 export const getDbTicketsByPaymentStatus = async (
   request: FastifyRequest,
   reply: FastifyReply,
@@ -42,7 +34,7 @@ export const getDbTicketsByPaymentStatus = async (
     }
 
     const tickets = await getTicketsByConfirmedStatus();
-    const ticketsToSend: guestTicketInformation[] = tickets.map(
+    const ticketsToSend = tickets.map(
       ({ id, confirmationId, invoice, valid }) => ({
         id: id,
         confirmationId: confirmationId,
