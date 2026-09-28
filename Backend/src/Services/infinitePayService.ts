@@ -37,8 +37,7 @@ export async function createPaymentLink(
           email: userData.userEmail,
           phone_number: userData.userPhone,
         },
-        webhook_url:
-          "https://rebuff-engaging-devotedly.ngrok-free.dev/api/webhook-infinitepay",
+        webhook_url: env.apiBaseUrl + "/api/infinite-pay-webhook",
       },
     )
     .catch(function (error) {
