@@ -41,6 +41,7 @@ export default function guestListPage() {
           const { data: session, error } = await authClient.getSession();
 
           if (!session || error) {
+            console.log(error);
             router.replace("/login");
             return;
           }
