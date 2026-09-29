@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import app from "../src/app.js";
+import app from "./app.js";
 
 let ready: Promise<void> | undefined;
 
