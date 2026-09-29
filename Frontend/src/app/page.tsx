@@ -41,7 +41,7 @@ export default function Home() {
   async function handleEfetuarPagamento() {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/pagamento`,
+        `${process.env.NEXT_PUBLIC_API_URL}/pagamento`,
         {
           userName: userData.name,
           userEmail: userData.email,

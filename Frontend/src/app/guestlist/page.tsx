@@ -78,7 +78,7 @@ export default function guestListPage() {
         async function loadGuests() {
           try {
             const tickets = await axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL}/api/confirmed-guests`,
+              `${process.env.NEXT_PUBLIC_API_URL}/confirmed-guests`,
               {
                 withCredentials: true,
               },
