@@ -63,12 +63,12 @@ fastify.get("/health", async (req, res) => {
   };
 });
 
-await fastify.register(checkoutRoutes, { prefix: "api" });
+await fastify.register(checkoutRoutes);
 
 await fastify.register(async (fastify) => {
   fastify.addHook("preHandler", requireAuth);
 
-  await fastify.register(dbRoutes, { prefix: "api" });
+  await fastify.register(dbRoutes);
 });
 
 fastify.setErrorHandler((error: FastifyError, request, reply) => {
