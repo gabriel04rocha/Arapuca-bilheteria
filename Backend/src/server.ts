@@ -9,7 +9,7 @@ fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
 });
 
 try {
-  await fastify.listen({ port: PORT, host: "0.0.0.0" });
+  await fastify.listen({ port: 4000, host: "0.0.0.0" });
   console.log("Servidor rodando na porta 4000.");
 } catch (err) {
   fastify.log.error(err);
