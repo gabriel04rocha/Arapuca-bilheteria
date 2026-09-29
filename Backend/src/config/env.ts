@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 
+dotenv.config();
+
 console.log("ENV CHECK:", {
   DATABASE_URL: Boolean(process.env.DATABASE_URL),
   BETTER_AUTH_SECRET: Boolean(process.env.BETTER_AUTH_SECRET),
@@ -8,17 +10,6 @@ console.log("ENV CHECK:", {
   TICKET_PRICE_CENTS: Boolean(process.env.TICKET_PRICE_CENTS),
   API_BASE_URL: Boolean(process.env.API_BASE_URL),
 });
-
-dotenv.config();
-
-interface Env {
-  databaseURL: string;
-  betterAuthSecret: string;
-  infinitePayHandle: string;
-  port: number;
-  ticketPriceCents: number;
-  trustedOrigins: string[];
-}
 
 function required(name: string): string {
   const value = process.env[name];
