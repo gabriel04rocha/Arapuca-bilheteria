@@ -46,7 +46,7 @@ export default function loginPage() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const { data: session, error } = await authClient.signIn.email({
+    const { data, error } = await authClient.signIn.email({
       email: formData.email,
       password: formData.password,
       callbackURL: "/guestlist",

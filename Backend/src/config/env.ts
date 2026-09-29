@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import fastify from "../fastify.js";
 
 dotenv.config();
 
@@ -17,6 +16,7 @@ export const env = {
   databaseUrl: required("DATABASE_URL"),
   betterAuthSecret: required("BETTER_AUTH_SECRET"),
   infinitePayHandle: required("INFINITE_PAY_HANDLE"),
+  betterAuthUrl: required("BETTER_AUTH_URL"),
   port: Number(process.env.PORT) || 4000,
   ticketPriceCents: Number(required("TICKET_PRICE_CENTS")),
   apiBaseUrl: required("API_BASE_URL"),
