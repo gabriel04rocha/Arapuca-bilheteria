@@ -16,7 +16,6 @@ export const getDbTicketsByPaymentStatus = async (
       headers: fromNodeHeaders(request.headers),
     });
 
-    console.log("antes de TUDO!");
     const { success } = await auth.api.userHasPermission({
       body: {
         userId: session?.user.id,
@@ -58,6 +57,7 @@ export const getDbTicketsByPaymentStatus = async (
         .send({ error: error.name, message: error.message });
     }
 
+    request.log.error("Erro interno do servidor ao buscar os ingressos.");
     return reply.status(500).send({
       error: "INTERNAL_SERVER_ERROR",
       message: "Erro interno do servidor.",

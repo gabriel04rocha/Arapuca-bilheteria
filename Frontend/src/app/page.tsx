@@ -72,17 +72,14 @@ export default function Home() {
 
   useEffect(() => {
     const exitTimer = setTimeout(() => {
-      console.log("isLeaving = true");
       setIsLeaving(true);
     }, 5000);
 
     const removeTimer = setTimeout(() => {
-      console.log("alertIsVisible = false");
       setIsAlertVisible(false);
     }, 5300);
 
     const clearState = setTimeout(() => {
-      console.log("isLeaving = false");
       setIsLeaving(false);
     }, 5350);
 

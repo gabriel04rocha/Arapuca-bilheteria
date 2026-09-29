@@ -52,17 +52,14 @@ export default function loginPage() {
 
   useEffect(() => {
     const exitTimer = setTimeout(() => {
-      console.log("isLeaving = true");
       setIsLeaving(true);
     }, 5000);
 
     const removeTimer = setTimeout(() => {
-      console.log("alertIsVisible = false");
       setIsAlertVisible(false);
     }, 5300);
 
     const clearState = setTimeout(() => {
-      console.log("isLeaving = false");
       setIsLeaving(false);
     }, 5350);
 
@@ -81,7 +78,6 @@ export default function loginPage() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
-    console.log(formData);
     const { error } = await authClient.admin.createUser({
       name: formData.name,
       email: formData.email,
@@ -104,7 +100,6 @@ export default function loginPage() {
         default:
           alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
           setErrorMessage(error.message);
-          console.log(error.code);
           setIsAlertVisible(true);
           break;
       }

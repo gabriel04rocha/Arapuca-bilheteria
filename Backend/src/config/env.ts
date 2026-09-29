@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log("ENV CHECK:", {
+fastify.log.info("ENV CHECK:", {
   DATABASE_URL: Boolean(process.env.DATABASE_URL),
   BETTER_AUTH_SECRET: Boolean(process.env.BETTER_AUTH_SECRET),
   INFINITE_PAY_HANDLE: Boolean(process.env.INFINITE_PAY_HANDLE),

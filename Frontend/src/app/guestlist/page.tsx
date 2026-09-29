@@ -103,9 +103,9 @@ export default function guestListPage() {
               return;
             }
 
-            setIsAlertVisible(true);
-            alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
-            setErrorMessage("Ocorreu um erro inesperado.");
+            triggerAlert(
+              "Ocorreu um erro inesperado ao carregar a lista de convidados.",
+            );
             return;
           }
         }
@@ -123,17 +123,14 @@ export default function guestListPage() {
 
   useEffect(() => {
     const exitTimer = setTimeout(() => {
-      console.log("isLeaving = true");
       setIsLeaving(true);
     }, 5000);
 
     const removeTimer = setTimeout(() => {
-      console.log("alertIsVisible = false");
       setIsAlertVisible(false);
     }, 5300);
 
     const clearState = setTimeout(() => {
-      console.log("isLeaving = false");
       setIsLeaving(false);
     }, 5350);
 

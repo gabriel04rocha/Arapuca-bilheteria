@@ -14,8 +14,6 @@ const fastify = Fastify({
   logger: true,
 });
 
-const logger = fastify.log;
-
 await fastify.register(cors, {
   origin: env.trustedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
