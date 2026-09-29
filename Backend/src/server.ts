@@ -33,7 +33,7 @@ fastify.get("/", async () => {
 console.log("ANTES DO LISTEN");
 
 await fastify.listen({
-  port: Number(process.env.PORT) || 3000,
+  port: 3000,
   host: "0.0.0.0",
 });
 

@@ -30,3 +30,5 @@ public/uploads/*
 
 # Logs
 npm-debug.log*
+.vercel
+.env*
