@@ -3,18 +3,6 @@ import fastify from "../fastify.js";
 
 dotenv.config();
 
-fastify.log.info(
-  {
-    DATABASE_URL: Boolean(process.env.DATABASE_URL),
-    BETTER_AUTH_SECRET: Boolean(process.env.BETTER_AUTH_SECRET),
-    INFINITE_PAY_HANDLE: Boolean(process.env.INFINITE_PAY_HANDLE),
-    TRUSTED_ORIGINS: Boolean(process.env.TRUSTED_ORIGINS),
-    TICKET_PRICE_CENTS: Boolean(process.env.TICKET_PRICE_CENTS),
-    API_BASE_URL: Boolean(process.env.API_BASE_URL),
-  },
-  "ENV CHECK:",
-);
-
 function required(name: string): string {
   const value = process.env[name];
 
