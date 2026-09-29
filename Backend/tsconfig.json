@@ -15,6 +15,7 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "prisma/seed.js",
-    "src/fastify.ts"
+    "src/app.ts",
+    "server.ts"
   ]
 }

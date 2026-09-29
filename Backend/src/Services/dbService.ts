@@ -1,4 +1,4 @@
-import fastify from "../fastify.js";
+import fastify from "../app.js";
 import shortid from "shortid";
 import type { userReceivedInfo } from "../types/internalDataTypes.js";
 import { infinitePayCallbackData } from "../types/infinitePayTypes.js";
