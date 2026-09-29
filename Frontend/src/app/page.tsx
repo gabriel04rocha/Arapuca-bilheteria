@@ -60,7 +60,14 @@ export default function Home() {
           );
           return;
         }
-
+        if (
+          error.response?.status === 500 &&
+          error.response.data.name === "PAYMENT_LINK_CREATION_FAILED"
+        ) {
+          setAlertSwitch(!alertSwitch);
+          setIsAlertVisible(true);
+          setAlertMessage("Falha ao criar o link de pagamento.");
+        }
         if (error.response?.status === 500) {
           alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
           setIsAlertVisible(true);

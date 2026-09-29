@@ -29,7 +29,7 @@ export const getPaymentLink = async (
 
     const orderNsu = crypto.randomUUID();
     const paymentLink = await createPaymentLink(request.body, orderNsu);
-    if (paymentLink) {
+    if (paymentLink.url.startsWith("https://")) {
       await createInvoice(request.body, orderNsu);
       request.log.info(
         {
@@ -47,10 +47,21 @@ export const getPaymentLink = async (
       });
     }
   } catch (error: appError | Error | any) {
-    if (error instanceof appError) {
-      return reply
-        .status(409)
-        .send({ error: error.name, message: error.message });
+    if (error instanceof appError && error.statusCode === 409) {
+      return reply.status(409).send({
+        error: "CPF_ALREADY_HAS_TICKET",
+        message: "Já existe um ingresso cadastrado neste CPF.",
+      });
+    }
+    if (error instanceof appError && error.statusCode === 500) {
+      request.log.error(
+        { error: error.name, message: error.message },
+        "Falha ao criar o link de pagamento.",
+      );
+      return reply.status(500).send({
+        error: "PAYMENT_LINK_CREATION_FAILED",
+        message: "Falha ao criar o link de pagamento.",
+      });
     }
     request.log.error(
       { error: error.name, message: error.message },
