@@ -171,7 +171,7 @@ export default function guestListPage() {
           <h1 className="text-[40px]">Lista de convidados</h1>
         </div>
         <div className="w-full">
-          {guests.length > 1 ? (
+          {guests.length >= 1 ? (
             <Table>
               <TableCaption>
                 lista de convidados confirmados da Arapuca
