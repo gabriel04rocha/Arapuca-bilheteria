@@ -24,7 +24,7 @@ await fastify.register(cors, {
 
 fastify.route({
   method: ["GET", "POST"],
-  url: "/api/auth/*",
+  url: "/auth/*",
   async handler(request, reply) {
     try {
       const url = new URL(request.url, `https://${request.headers.host}`);
