@@ -18,6 +18,8 @@ export const auth = betterAuth({
     enabled: true,
   },
 
+  basePath: "/auth",
+
   plugins: [
     adminPlugin({
       ac,

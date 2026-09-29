@@ -7,6 +7,7 @@ export const authClient = createAuthClient({
   fetchOptions: {
     credentials: "include",
   },
+  basePath: "/auth",
   plugins: [
     adminClient({
       ac,
