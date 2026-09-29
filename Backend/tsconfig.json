@@ -11,5 +11,10 @@
     "outDir": "dist",
     "rootDir": "./src"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "prisma/seed.js", "src/index.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "prisma/seed.js",
+    "src/fastify.ts"
+  ]
 }
