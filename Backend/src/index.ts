@@ -7,10 +7,10 @@ fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
 
 try {
   await fastify.listen({
-    port: Number(process.env.PORT) || 4000,
+    port: Number(process.env.PORT) || 3000,
     host: "0.0.0.0",
   });
-  console.log("Servidor rodando na porta 4000.");
+  console.log("Servidor rodando na porta 3000.");
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);
