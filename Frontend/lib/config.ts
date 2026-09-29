@@ -5,9 +5,9 @@
 export const CONFIG = {
   evento: {
     data: "10 de outubro de 2026",
-    horario: "20h",
-    local: "Local a definir",
-    cidade: "Cidade a definir",
+    horario: "às 20:00",
+    local: "Taguatinga Norte - ",
+    cidade: "Brasília/DF",
     valor: 15.0, // valor do ingresso em reais
   },
 };
