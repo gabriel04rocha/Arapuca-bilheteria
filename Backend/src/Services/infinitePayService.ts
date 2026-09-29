@@ -3,7 +3,6 @@ import { env } from "../config/env.js";
 import { userReceivedInfo } from "../types/internalDataTypes.js";
 import ipPaymentLinkSchema from "../schemas/infinitePayPaymentLink.json" with { type: "json" };
 import { createRequire } from "node:module";
-import Ajv from "ajv/dist/ajv.js";
 
 type CreatePaymentLinkResponse = {
   url: string;

@@ -46,13 +46,16 @@ export const getPaymentLink = async (
         message: "Falha ao criar o link de pagamento.",
       });
     }
-  } catch (error) {
+  } catch (error: appError | Error | any) {
     if (error instanceof appError) {
       return reply
         .status(409)
         .send({ error: error.name, message: error.message });
     }
-    request.log.error("Erro interno do servidor:");
+    request.log.error(
+      { error: error.name, message: error.message },
+      "Erro interno do servidor:",
+    );
     return reply.status(500).send({
       error: "INTERNAL_SERVER_ERROR",
       message: "Erro interno do servidor.",
