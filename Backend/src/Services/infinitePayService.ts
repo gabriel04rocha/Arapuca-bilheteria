@@ -1,8 +1,6 @@
 import axios from "axios";
 import { env } from "../config/env.js";
 import { userReceivedInfo } from "../types/internalDataTypes.js";
-import ipPaymentLinkSchema from "../schemas/infinitePayPaymentLink.json" with { type: "json" };
-import { createRequire } from "node:module";
 
 type CreatePaymentLinkResponse = {
   url: string;
@@ -12,12 +10,6 @@ export async function createPaymentLink(
   userData: userReceivedInfo,
   orderNsu: string,
 ): Promise<CreatePaymentLinkResponse> {
-  const require = createRequire(import.meta.url);
-
-  const Ajv = require("ajv");
-
-  const validate = Ajv.compile(ipPaymentLinkSchema);
-
   const response = await axios
     .post<CreatePaymentLinkResponse>(
       "https://api.checkout.infinitepay.io/links",
@@ -42,10 +34,6 @@ export async function createPaymentLink(
     .catch(function (error) {
       throw Error(error.message);
     });
-
-  if (!validate(response.data)) {
-    throw new Error("Formato de resposta da Infinite Pay inválido.");
-  }
 
   return response.data;
 }
