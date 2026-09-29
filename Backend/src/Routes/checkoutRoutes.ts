@@ -26,7 +26,7 @@ async function checkoutRoutes(app: FastifyInstance) {
   );
 
   app.post(
-    `${env.apiBaseUrl}/webhook-infinitepay`,
+    "/webhook-infinitepay",
     {
       schema: {
         body: {
