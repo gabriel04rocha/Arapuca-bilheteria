@@ -28,7 +28,7 @@ export async function createPaymentLink(
           email: userData.userEmail,
           phone_number: userData.userPhone,
         },
-        webhook_url: env.apiBaseUrl + "/api/infinite-pay-webhook",
+        webhook_url: env.apiBaseUrl + "/infinite-pay-webhook",
       },
     )
     .catch(function (error) {
