@@ -27,7 +27,7 @@ fastify.route({
   url: "/api/auth/*",
   async handler(request, reply) {
     try {
-      const url = new URL(request.url, `http://${request.headers.host}`);
+      const url = new URL(request.url, `https://${request.headers.host}`);
 
       const headers = fromNodeHeaders(request.headers);
 

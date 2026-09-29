@@ -1,5 +1,4 @@
-import fastify, { FastifyInstance } from "fastify";
-import { getDbTicketById } from "../Controllers/checkoutController.js";
+import { FastifyInstance } from "fastify";
 import { getDbTicketsByPaymentStatus } from "../Controllers/dbController.js";
 import userSignup from "../schemas/userSignup.json" with { type: "json" };
 
