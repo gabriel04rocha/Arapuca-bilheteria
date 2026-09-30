@@ -16,7 +16,7 @@ model Invoice {
   receiptUrl           String?
   ticket               Ticket?
   customerName         String
-  customerCPF          String @unique
+  customerCPF          String
   customerPhoneNumber  String
   customerEmail        String
   createdAt            DateTime @default(now())
