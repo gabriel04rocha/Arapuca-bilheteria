@@ -6,7 +6,7 @@ import { auth } from "./lib/auth.js";
 import { prisma } from "./lib/prisma.js";
 import dbRoutes from "./Routes/dbRoutes.js";
 import { env } from "./config/env.js";
-import { appError } from "./errors/appError.js";
+import { AppError } from "./errors/AppError.js";
 import { FastifyError } from "fastify";
 import { requireAuth } from "./middlewares/requireAuth.js";
 
@@ -72,7 +72,7 @@ await fastify.register(async (fastify) => {
 });
 
 fastify.setErrorHandler((error: FastifyError, request, reply) => {
-  if (error instanceof appError) {
+  if (error instanceof AppError) {
     return reply.status(409).send({
       error: error.name,
       message: error.message,

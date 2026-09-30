@@ -90,9 +90,7 @@ async function main() {
     const invoice = await prisma.invoice.create({
       data: {
         price: data.price,
-
         orderNsu: shortid.generate(),
-
         customerName: data.name,
         customerCPF: data.cpf,
         customerPhoneNumber: data.phone,
@@ -107,7 +105,14 @@ async function main() {
 
           ticket: {
             create: {
-              confirmationId: shortid.generate(),
+              confirmationId:
+                "ARAPUCA-" +
+                crypto
+                  .randomBytes(6)
+                  .toString("hex")
+                  .toUpperCase()
+                  .match(/.{1,4}/g)!
+                  .join("-"),
               valid: true,
             },
           },

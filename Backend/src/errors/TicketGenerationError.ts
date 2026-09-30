@@ -1,17 +1,17 @@
-type errorNames = "TICKETS_NOT_FOUND";
+type errorNames = "COULD_NOT_GENERATE_TICKET";
 
-export class DbError extends Error {
+export class TicketGenerationError extends Error {
   name: errorNames;
   statusCode: number;
 
   constructor({
     name,
-    message,
     statusCode,
+    message,
   }: {
     name: errorNames;
-    message: string;
     statusCode: number;
+    message: string;
   }) {
     super(message);
     this.name = name;

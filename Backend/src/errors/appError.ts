@@ -8,7 +8,7 @@ type errorName =
   | "USER_DOES_NOT_HAVE_PERMISSION"
   | "PAYMENT_LINK_CREATION_FAILED";
 
-export class appError extends Error {
+export class AppError extends Error {
   name: errorName;
   statusCode: number;
 

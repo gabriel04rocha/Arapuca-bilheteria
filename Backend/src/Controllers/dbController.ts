@@ -1,10 +1,10 @@
 import { getTicketsByConfirmedStatus } from "../Services/dbService.js";
 import { userReceivedInfo } from "../types/internalDataTypes.js";
 import { createInvoice } from "../Services/dbService.js";
-import { dbError } from "../errors/dbError.js";
+import { DbError } from "../errors/DbError.js";
 import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { auth } from "../lib/auth.js";
-import { appError } from "../errors/appError.js";
+import { AppError } from "../errors/AppError.js";
 import { fromNodeHeaders } from "better-auth/node";
 
 export const getDbTicketsByPaymentStatus = async (
@@ -24,7 +24,7 @@ export const getDbTicketsByPaymentStatus = async (
     });
 
     if (!success) {
-      throw new appError({
+      throw new AppError({
         name: "USER_DOES_NOT_HAVE_PERMISSION",
         message:
           "O usuário logado não possui permissão para acessar este recurso.",
@@ -45,13 +45,13 @@ export const getDbTicketsByPaymentStatus = async (
 
     return reply.status(200).send(ticketsToSend);
   } catch (error) {
-    if (error instanceof appError) {
+    if (error instanceof AppError) {
       return reply
         .status(401)
         .send({ error: error.name, message: error.message });
     }
 
-    if (error instanceof dbError) {
+    if (error instanceof DbError) {
       return reply
         .status(404)
         .send({ error: error.name, message: error.message });

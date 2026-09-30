@@ -1,10 +1,10 @@
 import fastify from "../fastify.js";
-import shortid from "shortid";
 import type { userReceivedInfo } from "../types/internalDataTypes.js";
 import { infinitePayCallbackData } from "../types/infinitePayTypes.js";
 import { env } from "../config/env.js";
-import { appError } from "../errors/appError.js";
-import { dbError } from "../errors/dbError.js";
+import { AppError } from "../errors/AppError.js";
+import { DbError } from "../errors/DbError.js";
+import crypto from "node:crypto";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 export const createInvoice = async (
@@ -28,7 +28,7 @@ export const createInvoice = async (
       error instanceof PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      throw new appError({
+      throw new AppError({
         name: "INVOICE_ALREADY_EXISTS",
         message: "Já existe um pedido com um dos identificadores informados.",
         statusCode: 409,
@@ -42,13 +42,20 @@ export const createInvoice = async (
 export const confirmInvoicePayment = async (
   payloadData: infinitePayCallbackData,
 ) => {
-  await fastify.prisma.$transaction(async (prisma) => {
+  const confirmationID = crypto
+    .randomBytes(4)
+    .toString("hex")
+    .toUpperCase()
+    .match(/.{1,4}/g)!
+    .join("-");
+
+  return await fastify.prisma.$transaction(async (prisma) => {
     const invoice = await prisma.invoice.findUnique({
       where: { orderNsu: payloadData.order_nsu },
     });
 
     if (!invoice) {
-      throw new appError({
+      throw new AppError({
         name: "INVOICE_NOT_FOUND",
         statusCode: 404,
         message: "Não foi encontrada uma invoice para este pedido.",
@@ -56,7 +63,7 @@ export const confirmInvoicePayment = async (
     }
 
     if (invoice.price !== payloadData.amount) {
-      throw new appError({
+      throw new AppError({
         name: "INVALID_PAYMENT_AMOUNT",
         statusCode: 400,
         message:
@@ -70,34 +77,46 @@ export const confirmInvoicePayment = async (
       });
 
       if (ticket && invoice.transactionNsu === payloadData.transaction_nsu) {
-        return;
+        return {
+          buyerEmail: invoice.customerEmail,
+          confirmationID: confirmationID,
+        };
       }
     }
 
     const updatedInvoice = await prisma.invoice.update({
       where: { orderNsu: payloadData.order_nsu },
-      data: { paymentConfirmed: true },
+      data: {
+        paymentConfirmed: true,
+        transactionNsu: payloadData.transaction_nsu,
+      },
     });
 
     try {
       await prisma.ticket.create({
         data: {
-          confirmationId: shortid.generate(),
+          confirmationId: confirmationID,
           invoiceId: updatedInvoice.id,
           valid: true,
         },
       });
+
+      return {
+        buyerEmail: invoice.customerEmail,
+        confirmationID: confirmationID,
+      };
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
         error.code === "P2002"
       ) {
-        throw new appError({
+        throw new AppError({
           name: "TICKET_ALREADY_EXISTS",
           statusCode: 409,
           message: "Já existe um ingresso cadastrado neste CPF.",
         });
       }
+      throw error;
     }
   });
 };
@@ -126,7 +145,7 @@ export const getTicketsByConfirmedStatus = async () => {
   });
 
   if (!tickets) {
-    throw new dbError({
+    throw new DbError({
       name: "TICKETS_NOT_FOUND",
       statusCode: 404,
       message: "Não foram encontrados ingressos confirmados.",

@@ -16,6 +16,7 @@ export const env = {
   databaseUrl: required("DATABASE_URL"),
   betterAuthSecret: required("BETTER_AUTH_SECRET"),
   infinitePayHandle: required("INFINITE_PAY_HANDLE"),
+  ResendApiKey: required("RESEND_API_KEY"),
   betterAuthUrl: required("BETTER_AUTH_URL"),
   port: Number(process.env.PORT) || 4000,
   ticketPriceCents: Number(required("TICKET_PRICE_CENTS")),

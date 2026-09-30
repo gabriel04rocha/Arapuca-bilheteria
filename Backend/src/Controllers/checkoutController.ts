@@ -7,8 +7,12 @@ import { createPaymentLink } from "../Services/infinitePayService.js";
 import type { userReceivedInfo } from "../types/internalDataTypes.js";
 import type { infinitePayCallbackData } from "../types/infinitePayTypes.js";
 import crypto from "crypto";
-import { appError } from "../errors/appError.js";
+import { AppError } from "../errors/AppError.js";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { generateTicket } from "../Services/ticketService.js";
+import { sendEmailToBuyer } from "../Services/emailService.js";
+import { TicketGenerationError } from "../errors/TicketGenerationError.js";
+import { EmailSendingError } from "../errors/EmailSendingError.js";
 
 export const getPaymentLink = async (
   request: FastifyRequest<{
@@ -20,7 +24,7 @@ export const getPaymentLink = async (
     const existingTicket = await getTicketByCPF(request.body.userCPF);
 
     if (existingTicket) {
-      throw new appError({
+      throw new AppError({
         name: "CPF_ALREADY_HAS_TICKET",
         message: "Já existe um ingresso cadastrado neste CPF.",
         statusCode: 409,
@@ -40,20 +44,20 @@ export const getPaymentLink = async (
       return reply.status(200).send(paymentLink);
     } else {
       request.log.error("Falha ao criar o link de pagamento.");
-      throw new appError({
+      throw new AppError({
         name: "PAYMENT_LINK_CREATION_FAILED",
         statusCode: 500,
         message: "Falha ao criar o link de pagamento.",
       });
     }
-  } catch (error: appError | Error | any) {
-    if (error instanceof appError && error.statusCode === 409) {
+  } catch (error: AppError | Error | any) {
+    if (error instanceof AppError && error.statusCode === 409) {
       return reply.status(409).send({
         error: "CPF_ALREADY_HAS_TICKET",
         message: "Já existe um ingresso cadastrado neste CPF.",
       });
     }
-    if (error instanceof appError && error.statusCode === 500) {
+    if (error instanceof AppError && error.statusCode === 500) {
       request.log.error(
         { error: error.name, message: error.message },
         "Falha ao criar o link de pagamento.",
@@ -79,23 +83,48 @@ export const confirmPayment = async (
   reply: FastifyReply,
 ) => {
   try {
-    await confirmInvoicePayment(request.body);
+    const ticketInfo = await confirmInvoicePayment(request.body);
+    const ticketBuffer = await generateTicket(ticketInfo.confirmationID);
+    sendEmailToBuyer(
+      ticketBuffer,
+      ticketInfo.buyerEmail,
+      ticketInfo.confirmationID,
+    );
     request.log.info(
       {
         order_nsu: request.body.order_nsu,
       },
       "Pagamento confirmado com sucesso para o pedido:",
     );
-    return reply.status(200);
+    return reply.status(200).send();
   } catch (error) {
-    if (error instanceof appError) {
+    if (error instanceof AppError) {
+      if (error.name === "TICKET_ALREADY_EXISTS") {
+        request.log.error(
+          `Já existe um ingresso com esse identificador no banco de dados.`,
+        );
+        return reply.status(200).send();
+      }
       request.log.error(
-        {
-          order_nsu: request.body.order_nsu,
-        },
-        "Falha ao confirmar o pagamento para o pedido:",
+        `Falha ao confirmar o pagamento para o pedido: ${error.name}`,
       );
-      return reply.status(400);
+      return reply.status(400).send();
+    }
+
+    if (error instanceof TicketGenerationError) {
+      request.log.error("Houve erro ao gerar o ingresso.");
+      return reply.status(500).send({
+        error: "INTERNAL_SERVER_ERROR",
+        message: "Erro interno do servidor.",
+      });
+    }
+
+    if (error instanceof EmailSendingError) {
+      request.log.error("Houve erro ao enviar o e-mail para o comprador.");
+      return reply.status(500).send({
+        error: "INTERNAL_SERVER_ERROR",
+        message: "Erro interno do servidor.",
+      });
     }
 
     request.log.error(
@@ -104,7 +133,7 @@ export const confirmPayment = async (
       },
       "Erro interno do servidor ao confirmar o pagamento para o pedido:",
     );
-    return reply.status(500);
+    return reply.status(500).send();
   }
 };
 
