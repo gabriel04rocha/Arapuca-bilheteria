@@ -38,7 +38,7 @@ export async function generateTicket(confirmationID: string) {
     </svg>
     `;
 
-    return await sharp("src/assets/bilete.png")
+    return await sharp("assets/bilete.png")
       .composite([
         {
           input: Buffer.from(textSvg),
