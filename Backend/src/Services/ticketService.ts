@@ -5,7 +5,7 @@ import { ticketTemplate } from "../assets/ticketTemplate.js";
 export async function generateTicket(confirmationID: string) {
   try {
     const textSvg = `
-    <svg width="1300px" height="700px">
+    <svg width="1080px" height="1920px">
 
     <style>
         .code {
@@ -15,18 +15,8 @@ export async function generateTicket(confirmationID: string) {
         }
     </style>
         <text
-            x="650"
-            y="420"
-            text-anchor="middle"
-            font-family="Arial Black"
-            font-weight="Black"
-            font-size="80px"
-        >
-            ARPC-
-        </text>
-        <text
-            x="650"
-            y="460"
+            x="540"
+            y="1390"
             text-anchor="middle"
             class="code"
         >
