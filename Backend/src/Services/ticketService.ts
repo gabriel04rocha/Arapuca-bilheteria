@@ -43,11 +43,11 @@ export async function generateTicket(confirmationID: string) {
       ])
       .jpeg()
       .toBuffer();
-  } catch (error) {
+  } catch (error: any) {
     throw new TicketGenerationError({
       name: "COULD_NOT_GENERATE_TICKET",
       statusCode: 500,
-      message: "Houve um erro ao gerar o ingresso.",
+      message: `Houve um erro ao gerar o ingresso: ${error.message}`,
     });
   }
 }
