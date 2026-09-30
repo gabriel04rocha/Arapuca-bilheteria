@@ -188,4 +188,6 @@ export const getTicketByCPF = async (userCPF: string) => {
   if (tickets) {
     return tickets;
   }
+
+  return null;
 };
