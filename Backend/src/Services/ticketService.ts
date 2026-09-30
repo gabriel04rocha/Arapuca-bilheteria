@@ -4,9 +4,6 @@ import { TicketGenerationError } from "../errors/TicketGenerationError.js";
 
 export async function generateTicket(confirmationID: string) {
   try {
-    const font = await fs.readFile(
-      "src/assets/fonts/ARCHIVO_EXPANDED-BLACK.TTF",
-    );
     const textSvg = `
     <svg width="1300px" height="700px">
 
