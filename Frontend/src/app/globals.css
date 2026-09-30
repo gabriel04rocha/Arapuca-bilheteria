@@ -4,6 +4,28 @@
 
 @custom-variant dark (&:is(.dark *));
 
+body {
+  min-height: 100vh !important;
+
+  background: linear-gradient(
+    46deg,
+    rgba(0, 0, 0, 1) 25%,
+    rgba(43, 2, 2, 1) 100%,
+    rgba(0, 0, 0, 1) 0%
+  ) !important;
+
+  background-size: cover;
+
+  background-repeat: repeat, no-repeat !important;
+
+  background-attachment: fixed !important;
+}
+
+@theme {
+  --font-archivo: var(--font-archivo-stats);
+  --font-hanson: var(--font-hanson-stats);
+}
+
 :root {
   --bg: #0b0b0a;
   --bg-panel: #141311;
@@ -74,6 +96,20 @@ body::before {
   z-index: 1;
 }
 
+.slice {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 0px 10px 40px;
+
+  border: 50px solid transparent;
+  border-image-source: url("../../public/frame 16.png");
+  border-image-slice: 50 fill;
+  border-image-width: 50px;
+  border-image-repeat: stretch;
+}
+
 .wrap {
   max-width: 1500px;
   margin: 0 auto;
@@ -117,14 +153,10 @@ body::before {
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: var(--bg-panel-2);
 }
 .stat {
   padding: 22px 12px;
   text-align: center;
-  border-left: 1px solid var(--line);
 }
 .stat:first-child {
   border-left: none;
@@ -160,11 +192,11 @@ section.step {
   font-size: 28px;
   font-weight: 600;
   margin: 0;
+  line-height: 0;
 }
 .step-sub {
   color: var(--ink-dim);
   font-size: 19px;
-  line-height: 1.45;
   max-width: 520px;
   margin: 14px 0 26px;
 }
@@ -186,7 +218,9 @@ button.action {
   letter-spacing: 0.02em;
   padding: 13px 28px;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 button.action:hover:not(:disabled) {
   background: var(--ink);
