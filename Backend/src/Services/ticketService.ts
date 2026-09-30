@@ -36,7 +36,9 @@ export async function generateTicket(confirmationID: string) {
     </svg>
     `;
 
-    return await sharp(path.join(__dirname, "..", "assets", "bilete.png"))
+    return await sharp(
+      path.join(import.meta.dirname, "..", "assets", "bilete.png"),
+    )
       .composite([
         {
           input: Buffer.from(textSvg),
