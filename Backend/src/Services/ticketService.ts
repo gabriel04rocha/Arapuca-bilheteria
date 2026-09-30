@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import fs from "node:fs/promises";
 import { TicketGenerationError } from "../errors/TicketGenerationError.js";
+import path from "node:path";
 
 export async function generateTicket(confirmationID: string) {
   try {
@@ -35,7 +36,7 @@ export async function generateTicket(confirmationID: string) {
     </svg>
     `;
 
-    return await sharp("assets/bilete.png")
+    return await sharp(path.join(__dirname, "..", "assets", "bilete.png"))
       .composite([
         {
           input: Buffer.from(textSvg),
