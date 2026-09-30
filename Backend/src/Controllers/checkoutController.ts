@@ -85,7 +85,7 @@ export const confirmPayment = async (
   try {
     const ticketInfo = await confirmInvoicePayment(request.body);
     const ticketBuffer = await generateTicket(ticketInfo.confirmationID);
-    sendEmailToBuyer(
+    await sendEmailToBuyer(
       ticketBuffer,
       ticketInfo.buyerEmail,
       ticketInfo.confirmationID,
