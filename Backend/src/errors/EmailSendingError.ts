@@ -1,17 +1,17 @@
-type errorNames = "TICKETS_NOT_FOUND";
+type errorNames = "EMAIL_COULD_NOT_BE_SENT";
 
-export class DbError extends Error {
+export class EmailSendingError extends Error {
   name: errorNames;
   statusCode: number;
 
   constructor({
     name,
-    message,
     statusCode,
+    message,
   }: {
     name: errorNames;
-    message: string;
     statusCode: number;
+    message: string;
   }) {
     super(message);
     this.name = name;
