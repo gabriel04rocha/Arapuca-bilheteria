@@ -6,19 +6,10 @@ export async function generateTicket(confirmationID: string) {
   try {
     const textSvg = `
     <svg width="1080px" height="1920px">
-
-    <style>
-        .code {
-            font-family: "Arial Black";
-            font-size: 42px;
-            font-weight: black;
-        }
-    </style>
         <text
             x="540"
             y="1390"
             text-anchor="middle"
-            class="code"
         >
             ${confirmationID}
         </text>
