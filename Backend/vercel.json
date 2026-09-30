@@ -1,8 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "src/index.ts": {
-      "includeFiles": "src/assets/**"
-    }
-  }
+  "includeFiles": ["src/assets/bilete.png"]
 }
