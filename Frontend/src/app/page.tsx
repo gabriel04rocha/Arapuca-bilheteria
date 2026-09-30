@@ -18,7 +18,7 @@ export default function Home() {
   const [isLeaving, setIsLeaving] = useState(false);
   const [alertSwitch, setAlertSwitch] = useState(true);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [whatsappVisible, setWhatsAppVisible] = useState(false);
+  const [whatsappVisible, setWhatsAppVisible] = useState(true);
   const [alertMessage, setAlertMessage] = useState("");
   const [userData, setUserData] = useState<submittedUserdata>({
     name: "",
@@ -221,16 +221,16 @@ export default function Home() {
             <AlertDescription>{alertMessage}</AlertDescription>
           </Alert>
         )}
-        <div className="fixed bottom-20 md:bottom-8 left-8 w-[100%]">
+        <div className="fixed bottom-[20%] md:bottom-8 w-[100%]">
           <div className="flex flex-row gap-2 items-center">
             <div
-              className=" w-[15%] md:w-[4%] bg-black rounded-full p-2 hover:scale-110 active:scale-110 transition-transform duration-300"
+              className=" w-[10%] md:w-[4%] bg-black rounded-full p-2 hover:scale-110 active:scale-110 transition-transform duration-300"
               onClick={() => setWhatsAppVisible(!whatsappVisible)}
             >
               <img src="/whatsapp.png" alt="WhatsApp" />
             </div>
             <div
-              className={`flex flex-col gap-2 transition-all ease-in-out duration-300 ${whatsappVisible ? "opacity-100" : "opacity-0"}`}
+              className={`flex flex-col gap-2 transition-all ease-in-out duration-300 ${whatsappVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
             >
               <Button className="text-left">
                 <a
