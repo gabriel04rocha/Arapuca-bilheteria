@@ -126,7 +126,7 @@ export default function Home() {
           <div className="label font-archivo font-bold text-[200%] text-red-600">
             INGRESSO
           </div>
-          <div className="font-hanson text-[300%] leading-10">
+          <div className="font-hanson text-[280%] leading-10">
             {`${CONFIG.evento.valor},00`}
             <br />
             REAIS
@@ -140,22 +140,22 @@ export default function Home() {
               src="element-1.png"
               className={`absolute ${
                 editState
-                  ? "top-[64%] left-[5%] md:top-[59.5%] md:left-[25.7%] w-[40px]"
-                  : "top-[64%] left-[5%] md:top-[53.5%] md:left-[25.7%] w-[40px]"
+                  ? "top-[64%] left-[5%] md:top-[57.9%] md:left-[25.7%] w-[40px]"
+                  : "top-[67%] left-[5%] md:top-[52.5%] md:left-[25.7%] w-[40px]"
               } w-[50px] rotate-[60deg]`}
             />
             <img
               src="element-2.png"
               className={`absolute ${
                 editState
-                  ? "top-[60%] right-[50%] md:top-[64%] md:right-[24.7%]"
-                  : "top-[69%] right-[5%] md:top-[57.5%] md:right-[24.7%]"
+                  ? "top-[69.5%] right-[2%] md:top-[65%] md:right-[24.7%]"
+                  : "top-[77%] right-[2%] md:top-[58.5%] md:right-[24.7%]"
               } w-[50px] rotate-[60deg]`}
             />
             <h2 className="step-title font-archivo">Dados</h2>
             <p className="font-archivo font-extralight text-center leading-5">
-              Cadastre seus dados abaixo para futura confirmação do seu
-              ingresso.
+              Cadastre seus dados abaixo para futura <br />
+              confirmação do seu ingresso.
             </p>
           </div>
           <div className="flex flex-col gap-3 w-[100%]">
