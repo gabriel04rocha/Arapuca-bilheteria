@@ -41,7 +41,7 @@ export async function sendEmailToBuyer(
       </p>
 
       <p>
-        <strong>Código:</strong> ${confirmationCode}
+        <span style="font-size: 25px">Seu código: <strong>${confirmationCode}</strong></span> 
       </p>
     </div>`,
     attachments: [
