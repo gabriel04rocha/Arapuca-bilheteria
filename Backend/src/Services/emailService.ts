@@ -1,9 +1,9 @@
 import { Resend } from "resend";
 import { env } from "../config/env.js";
 import { EmailSendingError } from "../errors/EmailSendingError.js";
+import { ticketTemplate } from "../assets/ticketTemplate.js";
 
 export async function sendEmailToBuyer(
-  ticket: Buffer,
   buyerEmail: string,
   confirmationCode: string,
 ) {
@@ -47,7 +47,7 @@ export async function sendEmailToBuyer(
     attachments: [
       {
         filename: `ingresso-Arapuca.jpg`,
-        content: ticket.toString("base64"),
+        content: ticketTemplate.toString("base64"),
       },
     ],
   });

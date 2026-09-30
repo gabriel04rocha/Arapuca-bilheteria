@@ -84,12 +84,7 @@ export const confirmPayment = async (
 ) => {
   try {
     const ticketInfo = await confirmInvoicePayment(request.body);
-    const ticketBuffer = await generateTicket(ticketInfo.confirmationID);
-    await sendEmailToBuyer(
-      ticketBuffer,
-      ticketInfo.buyerEmail,
-      ticketInfo.confirmationID,
-    );
+    await sendEmailToBuyer(ticketInfo.buyerEmail, ticketInfo.confirmationID);
     request.log.info(
       {
         order_nsu: request.body.order_nsu,
