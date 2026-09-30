@@ -112,7 +112,7 @@ export const confirmPayment = async (
     }
 
     if (error instanceof TicketGenerationError) {
-      request.log.error(`Houve erro ao gerar o ingresso: `);
+      request.log.error(`Houve erro ao gerar o ingresso: ${error.message}`);
       return reply.status(500).send({
         error: "INTERNAL_SERVER_ERROR",
         message: "Erro interno do servidor.",
