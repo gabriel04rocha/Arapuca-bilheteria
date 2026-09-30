@@ -98,43 +98,75 @@ export default function Home() {
   }, [alertSwitch]);
 
   return (
-    <div className="wrap">
+    <div className=" w-screen min-h-screen wrap">
       <div className="hero flex flex-col justify-center items-center">
         <img src="/logo.png" alt="Arapuca" />
       </div>
 
-      <div className="stats">
-        <div className="stat">
-          <div className="label">Data</div>
-          <div className="value">
-            {CONFIG.evento.data}, {CONFIG.evento.horario}
+      <div className="stats font-extralight gap-0 md:gap-10">
+        <div className="slice flex flex-col justify-center items-center text-center">
+          <div className="label font-archivo font-bold text-[200%] text-red-600">
+            DATA
+          </div>
+          <div className="font-hanson text-[195%] md:text-[300%] leading-8 md:leading-10">
+            {CONFIG.evento.data}
+            <br />
+            {CONFIG.evento.horario}
           </div>
         </div>
-        <div className="stat">
-          <div className="label">Local</div>
-          <div className="value">
-            {CONFIG.evento.local}, {CONFIG.evento.cidade}
+        <div className="slice flex flex-col justify-center items-center text-center">
+          <div className="label font-archivo font-bold text-[200%] text-red-600">
+            LOCAL
+          </div>
+          <div className="font-hanson text-[160%] md:text-[250%] leading-5 md:leading-10">
+            {CONFIG.evento.local}
           </div>
         </div>
-        <div className="stat">
-          <div className="label">Ingresso</div>
-          <div className="value">{`R$${CONFIG.evento.valor},00`}</div>
+        <div className="slice flex flex-col justify-center items-center text-center">
+          <div className="label font-archivo font-bold text-[200%] text-red-600">
+            INGRESSO
+          </div>
+          <div className="font-hanson text-[300%] leading-10">
+            {`${CONFIG.evento.valor},00`}
+            <br />
+            REAIS
+          </div>
         </div>
       </div>
-      <div className="flex flex-col gap-1">
-        <section className="step">
-          <div className="step-head">
-            <span className="step-num">I</span>
-            <h2 className="step-title">Dados</h2>
+      <div className="flex flex-col gap-0">
+        <section className="step flex flex-col gap-10 justify-center items-center">
+          <div className="border flex flex-col justify-center items-center gap-5 pt-6 pb-3 rounded-lg w-[100%] md:w-[50%]">
+            <img
+              src="element-1.png"
+              className={`absolute ${
+                editState
+                  ? "top-[64%] left-[5%] md:top-[59.5%] md:left-[25.7%] w-[40px]"
+                  : "top-[64%] left-[5%] md:top-[53.5%] md:left-[25.7%] w-[40px]"
+              } w-[50px] rotate-[60deg]`}
+            />
+            <img
+              src="element-2.png"
+              className={`absolute ${
+                editState
+                  ? "top-[60%] right-[50%] md:top-[64%] md:right-[24.7%]"
+                  : "top-[69%] right-[5%] md:top-[57.5%] md:right-[24.7%]"
+              } w-[50px] rotate-[60deg]`}
+            />
+            <img
+              src="element-3.png"
+              className={`absolute ${!editState ? "top-[69%] right-[5%] md:top-[100%] md:right-[24.7%]" : "top-[69%] right-[5%] md:top-[100%] md:right-[24.7%"} w-[300px]`}
+            />
+            <h2 className="step-title font-archivo">Dados</h2>
+            <p className="font-archivo font-extralight text-center leading-5">
+              Cadastre seus dados abaixo para futura confirmação do seu
+              ingresso.
+            </p>
           </div>
-          <p className="step-sub">
-            Cadastre seus dados abaixo para futura confirmação do seu ingresso.
-          </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-[100%]">
             {userData.cpf && !editState && (
-              <div className="panel flex flex-row justify-between">
+              <div className="border p-5 rounded-lg flex flex-row justify-between">
                 <div className="flex flex-col gap-2">
-                  <h1 className="text-lg">Informações salvas:</h1>
+                  <h1 className="text-[25px]">Informações salvas:</h1>
                   <div>
                     <p>Nome: {userData.name}</p>
                     <p>E-mail: {userData.email}</p>
@@ -156,7 +188,7 @@ export default function Home() {
               </div>
             )}
             {editState && (
-              <div className="panel">
+              <div className="">
                 <FormComponent submitToParent={handleFormSubmit} />
               </div>
             )}
@@ -164,16 +196,18 @@ export default function Home() {
         </section>
 
         {!editState && (
-          <section className="step">
-            <div className="step-head">
-              <span className="step-num">II</span>
-              <h2 className="step-title">Pagamento</h2>
+          <section className="flex flex-col justify-center items-center gap-5">
+            <div className="flex flex-col text-center border pl-7 pr-7 pt-7 pb-3 gap-5 rounded-lg">
+              <h2 className="step-title font-archivo">Pagamento</h2>
+              <p className=" font-archivo font-extralight">
+                Clique no botão abaixo para efetuar o pagamento do ingresso.
+              </p>
             </div>
-            <p className="step-sub">
-              Clique no botão abaixo para efetuar o pagamento do ingresso.
-            </p>
-            <div className="panel">
-              <button className="action" onClick={handleEfetuarPagamento}>
+            <div className="">
+              <button
+                className="action rounded-lg w-[100%]"
+                onClick={handleEfetuarPagamento}
+              >
                 Efetuar pagamento
               </button>
             </div>
