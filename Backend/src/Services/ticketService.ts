@@ -5,6 +5,10 @@ import path from "node:path";
 
 export async function generateTicket(confirmationID: string) {
   try {
+    const ticketTemplate = await fs.readFile(
+      path.join(import.meta.dirname, "..", "assets", "bilete.png"),
+    );
+
     const textSvg = `
     <svg width="1300px" height="700px">
 
@@ -36,9 +40,7 @@ export async function generateTicket(confirmationID: string) {
     </svg>
     `;
 
-    return await sharp(
-      path.join(import.meta.dirname, "..", "assets", "bilete.png"),
-    )
+    return await sharp(ticketTemplate)
       .composite([
         {
           input: Buffer.from(textSvg),
