@@ -1,14 +1,9 @@
 import sharp from "sharp";
-import fs from "node:fs/promises";
 import { TicketGenerationError } from "../errors/TicketGenerationError.js";
-import path from "node:path";
+import { ticketTemplate } from "../assets/ticketTemplate.js";
 
 export async function generateTicket(confirmationID: string) {
   try {
-    const ticketTemplate = await fs.readFile(
-      path.join(import.meta.dirname, "..", "assets", "bilete.png"),
-    );
-
     const textSvg = `
     <svg width="1300px" height="700px">
 
