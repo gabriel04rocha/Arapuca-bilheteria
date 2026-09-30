@@ -152,10 +152,6 @@ export default function Home() {
                   : "top-[69%] right-[5%] md:top-[57.5%] md:right-[24.7%]"
               } w-[50px] rotate-[60deg]`}
             />
-            <img
-              src="element-3.png"
-              className={`absolute ${!editState ? "top-[69%] right-[5%] md:top-[100%] md:right-[24.7%]" : "top-[69%] right-[5%] md:top-[100%] md:right-[24.7%"} w-[300px]`}
-            />
             <h2 className="step-title font-archivo">Dados</h2>
             <p className="font-archivo font-extralight text-center leading-5">
               Cadastre seus dados abaixo para futura confirmação do seu
