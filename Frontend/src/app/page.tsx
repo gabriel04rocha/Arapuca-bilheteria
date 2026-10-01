@@ -19,6 +19,7 @@ export default function Home() {
   const [alertSwitch, setAlertSwitch] = useState(true);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [whatsappVisible, setWhatsAppVisible] = useState(true);
+  const [gettingPaymentLink, setGettingPaymentLink] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [userData, setUserData] = useState<submittedUserdata>({
     name: "",
@@ -40,6 +41,7 @@ export default function Home() {
 
   async function handleEfetuarPagamento() {
     try {
+      setGettingPaymentLink(true);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/pagamento`,
         {
@@ -55,24 +57,29 @@ export default function Home() {
         if (error.response?.status === 409) {
           setAlertSwitch(!alertSwitch);
           setIsAlertVisible(true);
+          setGettingPaymentLink(false);
           setAlertMessage(
             "Já existe um ingresso cadastrado no CPF inserido. Por favor, mude o CPF.",
           );
           return;
         }
+
         if (
           error.response?.status === 500 &&
           error.response.data.name === "PAYMENT_LINK_CREATION_FAILED"
         ) {
           setAlertSwitch(!alertSwitch);
           setIsAlertVisible(true);
+          setGettingPaymentLink(false);
           setAlertMessage("Falha ao criar o link de pagamento.");
+          return;
         }
-        if (error.response?.status === 500) {
-          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
-          setIsAlertVisible(true);
-          setAlertMessage("Erro interno do servidor.");
-        }
+
+        alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+        setIsAlertVisible(true);
+        setGettingPaymentLink(false);
+        setAlertMessage("Erro interno do servidor.");
+        return;
       }
     }
   }
@@ -141,7 +148,9 @@ export default function Home() {
               className={`absolute ${
                 editState
                   ? "top-[64%] left-[5%] md:top-[57.9%] md:left-[25.7%] w-[40px]"
-                  : "top-[67%] left-[5%] md:top-[52.5%] md:left-[25.7%] w-[40px]"
+                  : gettingPaymentLink
+                    ? "top-[58%] left-[5%] md:top-[50.9%] md:left-[25.7%] w-[40px]"
+                    : "top-[67%] left-[5%] md:top-[52.5%] md:left-[25.7%] w-[40px]"
               } w-[50px] rotate-[60deg]`}
             />
             <img
@@ -149,7 +158,9 @@ export default function Home() {
               className={`absolute ${
                 editState
                   ? "top-[69.5%] right-[2%] md:top-[65%] md:right-[24.7%]"
-                  : "top-[77%] right-[2%] md:top-[58.5%] md:right-[24.7%]"
+                  : gettingPaymentLink
+                    ? "top-[63%] right-[2%] md:top-[56.9%] md:right-[24.7%]"
+                    : "top-[77%] right-[2%] md:top-[58.5%] md:right-[24.7%]"
               } w-[50px] rotate-[60deg]`}
             />
             <h2 className="step-title font-archivo">Dados</h2>
@@ -199,13 +210,19 @@ export default function Home() {
                 Clique no botão abaixo para efetuar o pagamento do ingresso.
               </p>
             </div>
-            <div className="">
+            <div className="flex flex-col justify-center items-center gap-3">
               <button
-                className="action rounded-lg w-[100%]"
+                className="action rounded-lg w-[100%] z-9999"
                 onClick={handleEfetuarPagamento}
+                disabled={gettingPaymentLink}
               >
                 Efetuar pagamento
               </button>
+              {gettingPaymentLink && (
+                <div className="">
+                  <img src="/loading-icon.gif" width="30px" />
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -221,7 +238,7 @@ export default function Home() {
             <AlertDescription>{alertMessage}</AlertDescription>
           </Alert>
         )}
-        <div className="fixed bottom-[20%] md:bottom-8 w-[100%]">
+        <div className="fixed bottom-[20%] md:bottom-8 w-[100%] border">
           <div className="flex flex-row gap-2 items-center">
             <div
               className=" w-[10%] md:w-[4%] bg-black rounded-full p-2 hover:scale-110 active:scale-110 transition-transform duration-300"
