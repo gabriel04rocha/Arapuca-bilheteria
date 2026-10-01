@@ -241,7 +241,7 @@ export default function Home() {
         <div className="fixed bottom-[20%] md:bottom-8 w-[100%]">
           <div className="flex flex-row gap-2 items-center">
             <div
-              className=" w-[10%] md:w-[4%] bg-black rounded-full p-2 hover:scale-110 active:scale-110 transition-transform duration-300"
+              className=" w-[10%] md:w-[4%] bg-black  rounded-full p-2 hover:scale-110 active:scale-110 transition-transform duration-300"
               onClick={() => setWhatsAppVisible(!whatsappVisible)}
             >
               <img src="/whatsapp.png" alt="WhatsApp" />

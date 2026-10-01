@@ -183,7 +183,7 @@ const FormComponent = ({ submitToParent }: formComponentProps) => {
           </div>
         </FieldSet>
         <Button
-          className="bg-white text-black text-lg p-6 md:p-3 hover:text-white"
+          className="bg-white text-black text-lg p-6 md:p-3 hover:text-white z-9999"
           type="submit"
         >
           Enviar
