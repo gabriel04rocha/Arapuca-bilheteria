@@ -145,11 +145,11 @@ export default function Home() {
           <div className="border relative flex flex-col justify-center items-center gap-5 pt-6 pb-3 rounded-lg w-[100%] md:w-[50%] ">
             <img
               src="element-1.png"
-              className={`absolute w-[50px] bottom-[50%] right-[94%] rotate-[60deg]`}
+              className={`absolute w-[50px] bottom-[50%] right-[87%] md:right-[94%] rotate-[60deg]`}
             />
             <img
               src="element-2.png"
-              className={`absolute top-[65%] left-[96%] w-[50px] rotate-[60deg]`}
+              className={`absolute top-[65%] left-[90%] md:left-[96%] w-[50px] rotate-[60deg]`}
             />
             <h2 className="step-title font-archivo">Dados</h2>
             <p className="font-archivo font-extralight text-center leading-5">
