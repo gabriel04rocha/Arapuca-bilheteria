@@ -10,7 +10,7 @@ datasource db {
 model Invoice {
   id                   String @id @default(cuid())
   price                Int
-  orderNsu             String @unique
+  orderNsu             String  @unique
   invoiceSlug          String? @unique
   transactionNsu       String? @unique
   receiptUrl           String?
@@ -21,12 +21,13 @@ model Invoice {
   customerEmail        String
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
-  paymentConfirmed     Boolean
+  paymentConfirmed     Boolean 
 }
 
 model Ticket {
   id                String   @id @default(cuid())
   confirmationId    String   @unique
+  customerCPF       String   @unique
   invoiceId         String   @unique
   valid             Boolean
   invoice           Invoice @relation(fields: [invoiceId], references: [id])

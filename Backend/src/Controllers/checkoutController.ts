@@ -23,11 +23,6 @@ export const getPaymentLink = async (
   try {
     const existingTicket = await getTicketByCPF(request.body.userCPF);
 
-    console.log("Ticket existente:", existingTicket);
-    console.log("Tipo:", typeof existingTicket);
-    console.log("É null:", existingTicket === null);
-    console.log("É undefined:", existingTicket === undefined);
-
     if (existingTicket) {
       throw new AppError({
         name: "CPF_ALREADY_HAS_TICKET",
@@ -35,8 +30,6 @@ export const getPaymentLink = async (
         statusCode: 409,
       });
     }
-
-    console.log("passsou do if");
 
     const orderNsu = crypto.randomUUID();
     const paymentLink = await createPaymentLink(request.body, orderNsu);

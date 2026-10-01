@@ -95,6 +95,7 @@ export const confirmInvoicePayment = async (
     try {
       await prisma.ticket.create({
         data: {
+          customerCPF: updatedInvoice.customerCPF,
           confirmationId: confirmationID,
           invoiceId: updatedInvoice.id,
           valid: true,
@@ -156,7 +157,7 @@ export const getTicketsByConfirmedStatus = async () => {
 };
 
 export const getInvoiceByCPF = async (userCPF: string) => {
-  const tickets = await fastify.prisma.invoice.findUnique({
+  const tickets = await fastify.prisma.ticket.findUnique({
     where: {
       customerCPF: userCPF,
     },
@@ -180,9 +181,7 @@ export const getInvoiceById = async (orderNsu: string) => {
 export const getTicketByCPF = async (userCPF: string) => {
   const tickets = await fastify.prisma.ticket.findFirst({
     where: {
-      invoice: {
-        customerCPF: userCPF,
-      },
+      customerCPF: userCPF,
     },
   });
   if (tickets) {
