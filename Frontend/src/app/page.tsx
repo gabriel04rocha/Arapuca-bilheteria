@@ -230,7 +230,7 @@ export default function Home() {
           <div className="w-full flex flex-row justify-center items-center">
             <div className="flex flex-row justify-center items-center w-[30%] md:w-[5%] gap-2">
               <img
-                src="/whatsapp.png"
+                src="/whatsapp2.png"
                 alt="WhatsApp"
                 className="min-w-0 flex-1 object-contain"
                 onClick={() => setWhatsAppVisible(!whatsappVisible)}
