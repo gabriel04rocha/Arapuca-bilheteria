@@ -142,26 +142,14 @@ export default function Home() {
       </div>
       <div className="flex flex-col gap-0">
         <section className="step flex flex-col gap-10 justify-center items-center">
-          <div className="border flex flex-col justify-center items-center gap-5 pt-6 pb-3 rounded-lg w-[100%] md:w-[50%]">
+          <div className="border relative flex flex-col justify-center items-center gap-5 pt-6 pb-3 rounded-lg w-[100%] md:w-[50%] ">
             <img
               src="element-1.png"
-              className={`absolute ${
-                editState
-                  ? "top-[64%] left-[5%] md:top-[57.9%] md:left-[25.7%] w-[40px]"
-                  : gettingPaymentLink
-                    ? "top-[58%] left-[5%] md:top-[50.9%] md:left-[25.7%] w-[40px]"
-                    : "top-[67%] left-[5%] md:top-[52.5%] md:left-[25.7%] w-[40px]"
-              } w-[50px] rotate-[60deg]`}
+              className={`absolute w-[50px] bottom-[50%] right-[94%] rotate-[60deg]`}
             />
             <img
               src="element-2.png"
-              className={`absolute ${
-                editState
-                  ? "top-[69.5%] right-[2%] md:top-[65%] md:right-[24.7%]"
-                  : gettingPaymentLink
-                    ? "top-[63%] right-[2%] md:top-[56.9%] md:right-[24.7%]"
-                    : "top-[77%] right-[2%] md:top-[58.5%] md:right-[24.7%]"
-              } w-[50px] rotate-[60deg]`}
+              className={`absolute top-[65%] left-[96%] w-[50px] rotate-[60deg]`}
             />
             <h2 className="step-title font-archivo">Dados</h2>
             <p className="font-archivo font-extralight text-center leading-5">
@@ -238,16 +226,27 @@ export default function Home() {
             <AlertDescription>{alertMessage}</AlertDescription>
           </Alert>
         )}
-        <div className="fixed bottom-[20%] md:bottom-8 w-[100%]">
-          <div className="flex flex-row gap-2 items-center">
-            <div
-              className=" w-[10%] md:w-[4%] bg-black  rounded-full p-2 hover:scale-110 active:scale-110 transition-transform duration-300"
-              onClick={() => setWhatsAppVisible(!whatsappVisible)}
-            >
-              <img src="/whatsapp.png" alt="WhatsApp" />
+        <div className="flex flex-col gap-3 mt-5">
+          <div className="w-full flex flex-row justify-center items-center">
+            <div className="flex flex-row justify-center items-center w-[30%] md:w-[5%] gap-2">
+              <img
+                src="/whatsapp.png"
+                alt="WhatsApp"
+                className="min-w-0 flex-1 object-contain"
+                onClick={() => setWhatsAppVisible(!whatsappVisible)}
+              />
+              <a
+                href="https://www.instagram.com/ar4puca"
+                target="_blank"
+                className="min-w-0 flex-1 object-contain"
+              >
+                <img src="/instagram.png" alt="Instagram" />
+              </a>
             </div>
+          </div>
+          <div className="flex justify-center items-center">
             <div
-              className={`flex flex-col gap-2 transition-all ease-in-out duration-300 ${whatsappVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
+              className={`flex flex-col gap-2 w-[15%] transition-all ease-in-out duration-300 ${whatsappVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
             >
               <Button className="text-left">
                 <a
