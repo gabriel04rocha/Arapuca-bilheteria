@@ -246,7 +246,7 @@ export default function Home() {
           </div>
           <div className="flex justify-center items-center">
             <div
-              className={`flex flex-col gap-2 w-[15%] transition-all ease-in-out duration-300 ${whatsappVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
+              className={`flex flex-col gap-2  w-[60%] md:w-[15%] transition-all ease-in-out duration-300 ${whatsappVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
             >
               <Button className="text-left">
                 <a
