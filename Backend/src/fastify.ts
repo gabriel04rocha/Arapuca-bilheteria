@@ -9,6 +9,8 @@ import { env } from "./config/env.js";
 import { AppError } from "./errors/AppError.js";
 import { FastifyError } from "fastify";
 import { requireAuth } from "./middlewares/requireAuth.js";
+import adminRoutes from "./Routes/adminRoutes.js";
+import { requireRole } from "./middlewares/requireRole.js";
 
 const fastify = Fastify({
   logger: true,
@@ -66,9 +68,15 @@ fastify.get("/health", async (req, res) => {
 await fastify.register(checkoutRoutes);
 
 await fastify.register(async (fastify) => {
-  fastify.addHook("preHandler", requireAuth);
+  fastify.addHook("preHandler", requireAuth());
 
   await fastify.register(dbRoutes);
+
+  fastify.register(async () => {
+    fastify.addHook("preHandler", requireRole(["admin"]));
+
+    await fastify.register(adminRoutes);
+  });
 });
 
 fastify.setErrorHandler((error: FastifyError, request, reply) => {

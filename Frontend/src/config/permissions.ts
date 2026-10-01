@@ -11,6 +11,7 @@ export const statement = {
     "read_guests",
     "set-password",
     "set-email",
+    "send_email",
   ],
 } as const;
 
@@ -21,6 +22,6 @@ export const user = ac.newRole({
 });
 
 export const admin = ac.newRole({
-  project: ["read_guests"],
+  project: ["read_guests", "send_email"],
   ...adminAc.statements,
 });

@@ -9,9 +9,7 @@ import type { infinitePayCallbackData } from "../types/infinitePayTypes.js";
 import crypto from "crypto";
 import { AppError } from "../errors/AppError.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { generateTicket } from "../Services/ticketService.js";
 import { sendEmailToBuyer } from "../Services/emailService.js";
-import { TicketGenerationError } from "../errors/TicketGenerationError.js";
 import { EmailSendingError } from "../errors/EmailSendingError.js";
 
 export const getPaymentLink = async (
@@ -104,14 +102,6 @@ export const confirmPayment = async (
         `Falha ao confirmar o pagamento para o pedido: ${error.name}`,
       );
       return reply.status(400).send();
-    }
-
-    if (error instanceof TicketGenerationError) {
-      request.log.error(`Houve erro ao gerar o ingresso: ${error.message}`);
-      return reply.status(500).send({
-        error: "INTERNAL_SERVER_ERROR",
-        message: "Erro interno do servidor.",
-      });
     }
 
     if (error instanceof EmailSendingError) {

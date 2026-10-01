@@ -1,0 +1,17 @@
+{
+  "$id": "sendEmailSchema",
+  "title": "User Email Schema",
+  "description": "Describes the JSON schema for sending the ticket email to the buyer.",
+  "type": "object",
+  "properties": {
+    "email": {
+      "description": "the user's email.",
+      "type": "string"
+    },
+    "confirmationCode": {
+      "description": "the user's confirmation code.",
+      "type": "string"
+    }
+  },
+  "required": ["email"]
+}
