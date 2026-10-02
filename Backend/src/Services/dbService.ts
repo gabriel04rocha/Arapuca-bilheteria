@@ -89,6 +89,8 @@ export const confirmInvoicePayment = async (
       data: {
         paymentConfirmed: true,
         transactionNsu: payloadData.transaction_nsu,
+        invoiceSlug: payloadData.invoice_slug,
+        receiptUrl: payloadData.receipt_url,
       },
     });
 
