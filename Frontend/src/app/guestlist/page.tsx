@@ -29,8 +29,11 @@ export default function guestListPage() {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-email`, {
         email: email,
-        confirmationCode: confirmationCode
-      })
+        confirmationCode: confirmationCode,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.name == "") {
+      }
     }
   }
 
@@ -126,7 +129,7 @@ export default function guestListPage() {
           }
         }
 
-        loadGuests();
+        await loadGuests();
       } catch (error) {
         console.log(error);
       } finally {
