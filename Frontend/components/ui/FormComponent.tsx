@@ -118,7 +118,7 @@ const FormComponent = ({ submitToParent }: formComponentProps) => {
           <div className="flex flex-col gap-3">
             <div className="flex flex-row gap-3">
               <Field className="flex gap-2">
-                <FieldLabel className="text-base">Nome</FieldLabel>
+                <FieldLabel className="text-base">Nome Completo</FieldLabel>
                 <Input
                   type="text"
                   {...register("name", {
