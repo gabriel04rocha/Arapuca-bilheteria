@@ -14,6 +14,7 @@ import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import Loading from "../components/loading";
 
 export default function guestListPage() {
   type guestTicketInformation = {
@@ -142,11 +143,7 @@ export default function guestListPage() {
   }, [alertSwitch]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <img src="/loading-icon.gif" width="50px" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

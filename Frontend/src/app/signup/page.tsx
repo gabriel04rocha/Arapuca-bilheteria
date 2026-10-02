@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Loading from "../components/loading";
 
 type Inputs = {
   name: string;
@@ -107,11 +108,7 @@ export default function loginPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <img src="/loading-icon.gif" width="50px" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

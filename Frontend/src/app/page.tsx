@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CONFIG } from "@/lib/config";
-import FormComponent from "../../components/ui/FormComponent";
+import FormComponent from "./components/FormComponent";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 
