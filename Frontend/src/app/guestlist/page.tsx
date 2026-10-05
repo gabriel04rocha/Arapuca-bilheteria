@@ -14,7 +14,11 @@ import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+<<<<<<< HEAD
 import Loading from "../components/loading";
+=======
+import { Button } from "@/components/ui/button";
+>>>>>>> 8c6d1a8c7ad9cd951bd7f27a35f517949d87c69a
 
 export default function guestListPage() {
   type guestTicketInformation = {
@@ -25,15 +29,29 @@ export default function guestListPage() {
     phone: string;
   };
 
+  async function sendEmail(email: string, confirmationCode: string) {
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-email`, {
+        email: email,
+        confirmationCode: confirmationCode,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.name == "") {
+      }
+    }
+  }
+
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [alertSwitch, setAlertSwitch] = useState(false);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLeaving, setIsLeaving] = useState(false);
+  const [permissions, setPermissions] = useState<String[]>([]);
   const [guests, setGuests] = useState<guestTicketInformation[]>([]);
-
   const router = useRouter();
+
+  let [userRole, setUserRole] = useState<string | null | undefined>("");
 
   useEffect(() => {
     async function loadPage() {
@@ -45,17 +63,21 @@ export default function guestListPage() {
             router.replace("/login");
             return;
           }
-          setUserEmail(session?.user.email);
 
-          return session.user.id;
+          setUserEmail(session?.user.email);
+          setUserRole(session.user.role);
+
+          return session;
         }
 
-        const userId = await checkAuth();
+        const session = await checkAuth();
 
-        if (!userId) return;
+        console.log(session);
+
+        if (!session) return;
 
         const { data, error } = await authClient.admin.hasPermission({
-          userId: userId,
+          userId: session.user.id,
           permissions: { project: ["read_guests"] },
         });
 
@@ -111,7 +133,7 @@ export default function guestListPage() {
           }
         }
 
-        loadGuests();
+        await loadGuests();
       } catch (error) {
         console.log(error);
       } finally {
@@ -182,6 +204,9 @@ export default function guestListPage() {
                   <TableHead className="text-white">Nome</TableHead>
                   <TableHead className="text-white">Telefone</TableHead>
                   <TableHead className="text-white">Válido?</TableHead>
+                  {userRole === "admin" && (
+                    <TableHead className="text-white">Enviar e-mail</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody className="text-[16px]">
@@ -202,6 +227,11 @@ export default function guestListPage() {
                       <TableCell className="text-left">
                         {item.valid ? "Sim" : "Não"}
                       </TableCell>
+                      {userRole === "admin" && (
+                        <TableCell className="flex justify-start">
+                          <Button>Enviar e-mail</Button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}
