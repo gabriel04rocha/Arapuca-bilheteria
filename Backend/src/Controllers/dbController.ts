@@ -37,6 +37,7 @@ export const getDbTicketsByPaymentStatus = async (
       ({ id, confirmationId, invoice, valid }) => ({
         id: id,
         confirmationId: confirmationId,
+        email: invoice.customerEmail,
         name: invoice.customerName,
         phone: invoice.customerPhoneNumber,
         valid: valid,

@@ -16,3 +16,8 @@ export type userSignupInfo = {
     customerEmail: string;
   };
 };
+
+export type userEmailInfo = {
+  email: string;
+  confirmationCode: string;
+};

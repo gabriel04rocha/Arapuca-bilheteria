@@ -15,15 +15,46 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import Loading from "../components/loading";
+import { Button } from "@/components/ui/button";
 
 export default function guestListPage() {
   type guestTicketInformation = {
     id: string;
     confirmationId: string;
+    email: string;
     valid: boolean;
     name: string;
     phone: string;
   };
+
+  async function sendEmail(email: string, confirmationCode: string) {
+    console.log(email, confirmationCode);
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/send-email`,
+        {
+          email: email,
+          confirmationCode: confirmationCode,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.name == "FAILED_TO_SEND_EMAIL") {
+        triggerAlert("Houve um erro ao enviar o e-mail.");
+        return;
+      }
+
+      if (axios.isAxiosError(error) && error.name == "INTERNAL_SERVER_ERROR") {
+        triggerAlert("Houve um erro interno do servidor ao enviar o e-mail.");
+        return;
+      }
+
+      triggerAlert("Houve um erro inesperado!");
+      return;
+    }
+  }
 
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,9 +62,17 @@ export default function guestListPage() {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLeaving, setIsLeaving] = useState(false);
+  const [permissions, setPermissions] = useState<String[]>([]);
   const [guests, setGuests] = useState<guestTicketInformation[]>([]);
-
   const router = useRouter();
+
+  let [userRole, setUserRole] = useState<string | null | undefined>("");
+
+  function triggerAlert(alertMessage: string) {
+    setIsAlertVisible(true);
+    setErrorMessage(alertMessage);
+    alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+  }
 
   useEffect(() => {
     async function loadPage() {
@@ -45,17 +84,21 @@ export default function guestListPage() {
             router.replace("/login");
             return;
           }
-          setUserEmail(session?.user.email);
 
-          return session.user.id;
+          setUserEmail(session?.user.email);
+          setUserRole(session.user.role);
+
+          return session;
         }
 
-        const userId = await checkAuth();
+        const session = await checkAuth();
 
-        if (!userId) return;
+        console.log(session);
+
+        if (!session) return;
 
         const { data, error } = await authClient.admin.hasPermission({
-          userId: userId,
+          userId: session.user.id,
           permissions: { project: ["read_guests"] },
         });
 
@@ -68,12 +111,6 @@ export default function guestListPage() {
         if (!data?.success) {
           router.replace("/login");
           return;
-        }
-
-        function triggerAlert(alertMessage: string) {
-          setIsAlertVisible(true);
-          setErrorMessage(alertMessage);
-          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
         }
 
         async function loadGuests() {
@@ -111,7 +148,7 @@ export default function guestListPage() {
           }
         }
 
-        loadGuests();
+        await loadGuests();
       } catch (error) {
         console.log(error);
       } finally {
@@ -182,6 +219,9 @@ export default function guestListPage() {
                   <TableHead className="text-white">Nome</TableHead>
                   <TableHead className="text-white">Telefone</TableHead>
                   <TableHead className="text-white">Válido?</TableHead>
+                  {userRole === "admin" && (
+                    <TableHead className="text-white">Enviar e-mail</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody className="text-[16px]">
@@ -202,6 +242,17 @@ export default function guestListPage() {
                       <TableCell className="text-left">
                         {item.valid ? "Sim" : "Não"}
                       </TableCell>
+                      {userRole === "admin" && (
+                        <TableCell className="flex justify-start">
+                          <Button
+                            onClick={() =>
+                              sendEmail(item.email, item.confirmationId)
+                            }
+                          >
+                            Enviar e-mail
+                          </Button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}
