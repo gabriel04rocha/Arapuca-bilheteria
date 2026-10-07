@@ -14,30 +14,45 @@ import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-<<<<<<< HEAD
 import Loading from "../components/loading";
-=======
 import { Button } from "@/components/ui/button";
->>>>>>> 8c6d1a8c7ad9cd951bd7f27a35f517949d87c69a
 
 export default function guestListPage() {
   type guestTicketInformation = {
     id: string;
     confirmationId: string;
+    email: string;
     valid: boolean;
     name: string;
     phone: string;
   };
 
   async function sendEmail(email: string, confirmationCode: string) {
+    console.log(email, confirmationCode);
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-email`, {
-        email: email,
-        confirmationCode: confirmationCode,
-      });
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/send-email`,
+        {
+          email: email,
+          confirmationCode: confirmationCode,
+        },
+        {
+          withCredentials: true,
+        },
+      );
     } catch (error) {
-      if (axios.isAxiosError(error) && error.name == "") {
+      if (axios.isAxiosError(error) && error.name == "FAILED_TO_SEND_EMAIL") {
+        triggerAlert("Houve um erro ao enviar o e-mail.");
+        return;
       }
+
+      if (axios.isAxiosError(error) && error.name == "INTERNAL_SERVER_ERROR") {
+        triggerAlert("Houve um erro interno do servidor ao enviar o e-mail.");
+        return;
+      }
+
+      triggerAlert("Houve um erro inesperado!");
+      return;
     }
   }
 
@@ -52,6 +67,12 @@ export default function guestListPage() {
   const router = useRouter();
 
   let [userRole, setUserRole] = useState<string | null | undefined>("");
+
+  function triggerAlert(alertMessage: string) {
+    setIsAlertVisible(true);
+    setErrorMessage(alertMessage);
+    alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
+  }
 
   useEffect(() => {
     async function loadPage() {
@@ -90,12 +111,6 @@ export default function guestListPage() {
         if (!data?.success) {
           router.replace("/login");
           return;
-        }
-
-        function triggerAlert(alertMessage: string) {
-          setIsAlertVisible(true);
-          setErrorMessage(alertMessage);
-          alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
         }
 
         async function loadGuests() {
@@ -229,7 +244,13 @@ export default function guestListPage() {
                       </TableCell>
                       {userRole === "admin" && (
                         <TableCell className="flex justify-start">
-                          <Button>Enviar e-mail</Button>
+                          <Button
+                            onClick={() =>
+                              sendEmail(item.email, item.confirmationId)
+                            }
+                          >
+                            Enviar e-mail
+                          </Button>
                         </TableCell>
                       )}
                     </TableRow>
