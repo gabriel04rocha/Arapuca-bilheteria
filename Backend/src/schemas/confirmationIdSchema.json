@@ -1,0 +1,13 @@
+{
+  "$id": "confirmationIdSchema",
+  "title": "Confirmation ID Schema",
+  "description": "Describes the JSON schema for validating the ticket confirmation ID.",
+  "type": "object",
+  "properties": {
+    "confirmationID": {
+      "description": "the user's email.",
+      "type": "string"
+    }
+  },
+  "required": ["confirmationID"]
+}

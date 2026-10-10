@@ -192,3 +192,45 @@ export const getTicketByCPF = async (userCPF: string) => {
 
   return null;
 };
+
+export const validateDbTicket = async (confirmationID: string) => {
+  const ticket = await getTicketByConfirmationID(confirmationID);
+
+  if (!ticket.valid) {
+    throw new AppError({
+      name: "TICKET_IS_ALREADY_INVALID",
+      message:
+        "O ingresso que contém o código de confirmação informado já está inválido.",
+      statusCode: 409,
+    });
+  }
+
+  await fastify.prisma.ticket.update({
+    where: {
+      confirmationId: confirmationID,
+    },
+
+    data: {
+      valid: false,
+    },
+  });
+};
+
+export const getTicketByConfirmationID = async (confirmationID: string) => {
+  const ticket = await fastify.prisma.ticket.findFirst({
+    where: {
+      confirmationId: confirmationID,
+    },
+  });
+
+  if (ticket) {
+    return ticket;
+  } else {
+    throw new DbError({
+      name: "TICKETS_NOT_FOUND",
+      message:
+        "Não há nenhum ingresso cadastrado com este código de confirmação.",
+      statusCode: 404,
+    });
+  }
+};

@@ -16,8 +16,30 @@ import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import Loading from "../components/loading";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import TicketValidationComponent from "../components/TicketValidationComponent";
 
 export default function guestListPage() {
+  const [userEmail, setUserEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [alertSwitch, setAlertSwitch] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [permissions, setPermissions] = useState<String[]>([]);
+  const [guests, setGuests] = useState<guestTicketInformation[]>([]);
+  const [alertType, setAlertType] = useState<
+    "destructive" | "default" | null | undefined
+  >(null);
+  const router = useRouter();
+
   type guestTicketInformation = {
     id: string;
     confirmationId: string;
@@ -27,8 +49,52 @@ export default function guestListPage() {
     phone: string;
   };
 
+  async function handleSubmitToParent(data: { confirmationID: string }) {
+    await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/validate-ticket`,
+        {
+          confirmationID: data.confirmationID,
+        },
+        {
+          withCredentials: true,
+        },
+      )
+      .catch((error) => {
+        if (
+          axios.isAxiosError(error) &&
+          error.response?.data.name == "TICKET_IS_ALREADY_INVALID"
+        ) {
+          triggerAlert("Ingresso já invalidado.", "destructive");
+          throw error;
+        }
+
+        console.log(error.response?.data.name);
+
+        if (
+          axios.isAxiosError(error) &&
+          error.response?.data.name == "TICKET_NOT_FOUND"
+        ) {
+          triggerAlert("Ingresso não encontrado.", "destructive");
+          throw error;
+        }
+
+        if (
+          axios.isAxiosError(error) &&
+          error.response?.data.name == "INTERNAL_SERVER_ERROR"
+        ) {
+          triggerAlert("Houve um erro interno do servidor.", "destructive");
+          throw error;
+        }
+
+        triggerAlert("Houve um erro inesperado!", "destructive");
+        throw error;
+      });
+
+    triggerAlert("Ticket invalidado com sucesso!", "default");
+  }
+
   async function sendEmail(email: string, confirmationCode: string) {
-    console.log(email, confirmationCode);
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/send-email`,
@@ -40,35 +106,34 @@ export default function guestListPage() {
           withCredentials: true,
         },
       );
+
+      triggerAlert("E-mail enviado com sucesso!", "default");
     } catch (error) {
       if (axios.isAxiosError(error) && error.name == "FAILED_TO_SEND_EMAIL") {
-        triggerAlert("Houve um erro ao enviar o e-mail.");
+        triggerAlert("Houve um erro ao enviar o e-mail.", "destructive");
         return;
       }
 
       if (axios.isAxiosError(error) && error.name == "INTERNAL_SERVER_ERROR") {
-        triggerAlert("Houve um erro interno do servidor ao enviar o e-mail.");
+        triggerAlert(
+          "Houve um erro interno do servidor ao enviar o e-mail.",
+          "destructive",
+        );
         return;
       }
 
-      triggerAlert("Houve um erro inesperado!");
+      triggerAlert("Houve um erro inesperado!", "destructive");
       return;
     }
   }
 
-  const [userEmail, setUserEmail] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [alertSwitch, setAlertSwitch] = useState(false);
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLeaving, setIsLeaving] = useState(false);
-  const [permissions, setPermissions] = useState<String[]>([]);
-  const [guests, setGuests] = useState<guestTicketInformation[]>([]);
-  const router = useRouter();
-
   let [userRole, setUserRole] = useState<string | null | undefined>("");
 
-  function triggerAlert(alertMessage: string) {
+  function triggerAlert(
+    alertMessage: string,
+    type: "destructive" | "default" | null | undefined,
+  ) {
+    setAlertType(type);
     setIsAlertVisible(true);
     setErrorMessage(alertMessage);
     alertSwitch ? setAlertSwitch(false) : setAlertSwitch(true);
@@ -93,8 +158,6 @@ export default function guestListPage() {
 
         const session = await checkAuth();
 
-        console.log(session);
-
         if (!session) return;
 
         const { data, error } = await authClient.admin.hasPermission({
@@ -105,6 +168,7 @@ export default function guestListPage() {
         if (error) {
           triggerAlert(
             "Não foi possível verificar as permissões do seu usuário.",
+            "destructive",
           );
         }
 
@@ -133,16 +197,21 @@ export default function guestListPage() {
               if (error.response?.status === 403) {
                 triggerAlert(
                   "Você não tem permissão para acessar esta página.",
+                  "destructive",
                 );
                 return;
               }
 
-              triggerAlert("Não foi possível carregar a lista de convidados.");
+              triggerAlert(
+                "Não foi possível carregar a lista de convidados.",
+                "destructive",
+              );
               return;
             }
 
             triggerAlert(
               "Ocorreu um erro inesperado ao carregar a lista de convidados.",
+              "destructive",
             );
             return;
           }
@@ -201,14 +270,34 @@ export default function guestListPage() {
         <div className="flex justify-center items-center w-[70%]">
           <img src="/logo.png" alt="Arapuca" />
         </div>
-        <div>
+        <div className="flex flex-col gap-4">
           <h1 className="text-[40px]">Lista de convidados</h1>
+          <Dialog>
+            <DialogTrigger>
+              <Button className="text-[160%] p-5">Validar Ingresso</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-[150%]">
+                  Validação de ingressos
+                </DialogTitle>
+                <DialogDescription>
+                  Valide os ingressos para confirmar a entrada do convidado na
+                  festa.
+                </DialogDescription>
+              </DialogHeader>
+              <TicketValidationComponent
+                submitToParent={handleSubmitToParent}
+              />
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="w-full">
           {guests.length >= 1 ? (
             <Table>
               <TableCaption>
-                lista de convidados confirmados da Arapuca
+                lista de convidados confirmados da Arapuca | {guests.length}{" "}
+                convidados confirmados.
               </TableCaption>
               <TableHeader className="text-[14px]">
                 <TableRow className="bg-white/20 rounded-lg">
@@ -265,13 +354,15 @@ export default function guestListPage() {
         {isAlertVisible && (
           <Alert
             className={`
-        transition-all ease-in-out duration-300 fixed bottom-[10%] left-[25%] md:left-[70%]
+        transition-all ease-in-out duration-300 fixed bottom-[10%] left-[25%] md:left-[70%] z-999
         ${!isLeaving ? " animate-in fade-in slide-in-from-right-2" : ""}
         ${isLeaving ? " animate-out fade-out slide-out-to-top2" : ""}
         `}
-            variant="destructive"
+            variant={alertType}
           >
-            <AlertTitle>Erro!</AlertTitle>
+            <AlertTitle>
+              {alertType == "destructive" ? "Erro!" : "Sucesso!"}
+            </AlertTitle>
             <AlertDescription>{errorMessage}</AlertDescription>
           </Alert>
         )}

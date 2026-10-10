@@ -1,11 +1,26 @@
 import { FastifyInstance } from "fastify";
-import { getDbTicketsByPaymentStatus } from "../Controllers/dbController.js";
-import userSignup from "../schemas/userSignup.json" with { type: "json" };
+import {
+  getDbTicketsByPaymentStatus,
+  validateTicket,
+} from "../Controllers/dbController.js";
+import confirmationID from "../schemas/confirmationIdSchema.json" with { type: "json" };
 
 const dbRoutes = (app: FastifyInstance) => {
-  app.addSchema(userSignup);
+  app.addSchema(confirmationID);
 
   app.get("/confirmed-guests", getDbTicketsByPaymentStatus);
+
+  app.post(
+    "/validate-ticket",
+    {
+      schema: {
+        body: {
+          $ref: "confirmationIdSchema#",
+        },
+      },
+    },
+    validateTicket,
+  );
 };
 
 export default dbRoutes;
