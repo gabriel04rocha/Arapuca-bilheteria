@@ -8,7 +8,7 @@ export async function sendEmailToBuyer(
   confirmationCode: string,
 ) {
   const resend = new Resend(env.ResendApiKey);
-  const { data, error } = await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: "Ar4puca <contato@ar4puca.com.br>",
     to: [buyerEmail],
     subject: "Seu pagamento foi confirmado. Prepare-se para o desande.",

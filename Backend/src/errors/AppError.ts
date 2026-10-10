@@ -6,7 +6,8 @@ type errorName =
   | "INVOICE_NOT_FOUND"
   | "INVALID_PAYMENT_AMOUNT"
   | "USER_DOES_NOT_HAVE_PERMISSION"
-  | "PAYMENT_LINK_CREATION_FAILED";
+  | "PAYMENT_LINK_CREATION_FAILED"
+  | "TICKET_IS_ALREADY_INVALID";
 
 export class AppError extends Error {
   name: errorName;
