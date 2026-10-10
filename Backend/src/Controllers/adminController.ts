@@ -19,14 +19,14 @@ export const sendEmail = async (
 
     if (error instanceof EmailSendingError) {
       return reply.status(500).send({
-        error: "FAILED_TO_SEND_EMAIL",
+        name: "FAILED_TO_SEND_EMAIL",
         message:
           "Ocorreu um erro ao enviar o e-mail para o comprador solicitado",
       });
     }
 
     return reply.status(500).send({
-      error: "INTERNAL_SERVER_ERROR",
+      name: "INTERNAL_SERVER_ERROR",
       message: "Ocorreu um erro interno do servidor ao enviar o email.",
     });
   }

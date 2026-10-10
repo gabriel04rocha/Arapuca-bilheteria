@@ -61,7 +61,7 @@ export const getPaymentLink = async (
         "Falha ao criar o link de pagamento.",
       );
       return reply.status(500).send({
-        error: "PAYMENT_LINK_CREATION_FAILED",
+        name: "PAYMENT_LINK_CREATION_FAILED",
         message: "Falha ao criar o link de pagamento.",
       });
     }
@@ -70,7 +70,7 @@ export const getPaymentLink = async (
       "Erro interno do servidor:",
     );
     return reply.status(500).send({
-      error: "INTERNAL_SERVER_ERROR",
+      name: "INTERNAL_SERVER_ERROR",
       message: "Erro interno do servidor.",
     });
   }

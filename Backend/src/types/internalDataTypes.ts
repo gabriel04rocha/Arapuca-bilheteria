@@ -21,3 +21,7 @@ export type userEmailInfo = {
   email: string;
   confirmationCode: string;
 };
+
+export type confirmationIdPayload = {
+  confirmationID: string;
+};
