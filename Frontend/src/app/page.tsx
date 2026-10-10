@@ -134,7 +134,7 @@ export default function Home() {
             INGRESSO
           </div>
           <div className="font-hanson text-[280%] leading-10">
-            {`${CONFIG.evento.valor},00`}
+            {`${CONFIG.evento.valor},25`}
             <br />
             REAIS
           </div>

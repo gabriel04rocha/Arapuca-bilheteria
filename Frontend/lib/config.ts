@@ -8,6 +8,6 @@ export const CONFIG = {
     horario: "20:00",
     local: "TAGUATINGA NORTE",
     cidade: "Brasília/DF",
-    valor: 15.0, // valor do ingresso em reais
+    valor: 20.0, // valor do ingresso em reais
   },
 };
