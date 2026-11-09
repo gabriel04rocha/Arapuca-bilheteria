@@ -4,9 +4,9 @@
  */
 export const CONFIG = {
   evento: {
-    data: "10.OUT.26",
+    data: "13.NOV.26",
     horario: "20:00",
-    local: "TAGUATINGA NORTE",
+    local: "SQUARE HUB\nTAGUATINGA",
     cidade: "Brasília/DF",
     valor: 20.0, // valor do ingresso em reais
   },

@@ -9,6 +9,11 @@ const hanson = localFont({
   variable: "--font-hanson-stats",
 });
 
+const bahisy = localFont({
+  src: "../../public/fonts/Bahisy.otf",
+  variable: "--font-bahisy-stats",
+});
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const pirata = Pirata_One({
@@ -47,10 +52,11 @@ export default function RootLayout({
         inter.variable,
         archivo.variable,
         hanson.variable,
+        bahisy.variable,
       )}
     >
       <body
-        className={`${pirata.variable} ${barlow.variable} ${hanson.variable} min-h-screen bg-[#380404]`}
+        className={`${pirata.variable} ${barlow.variable} ${hanson.variable} ${bahisy.variable} min-h-screen bg-[#380404]`}
       >
         {children}
       </body>
