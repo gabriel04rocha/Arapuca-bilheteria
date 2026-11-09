@@ -24,7 +24,7 @@ export async function sendEmailToBuyer(
       box-shadow: 0 0 3 30px black;
     ">
       <img
-        src="https://www.ar4puca.com.br/logo.png"
+        src="https://www.ar4puca.com.br/logo-haloweeen.png"
         alt="Arapuca"
         width="300"
         style="display: block; margin: 0 auto 30px;"
