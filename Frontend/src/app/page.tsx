@@ -133,7 +133,7 @@ export default function Home() {
         <div className="slice flex flex-col justify-center items-center text-center">
           <div className="font-bahisy text-[200%] text-red-600">Ingresso</div>
           <div className="font-hanson text-[280%] leading-10">
-            {`${CONFIG.evento.valor},25`}
+            {`${CONFIG.evento.valor},00`}
             <br />
             REAIS
           </div>

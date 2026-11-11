@@ -8,6 +8,6 @@ export const CONFIG = {
     horario: "20:00",
     local: "SQUARE HUB\nTAGUATINGA",
     cidade: "Brasília/DF",
-    valor: 20.0, // valor do ingresso em reais
+    valor: 25.0, // valor do ingresso em reais
   },
 };
