@@ -107,16 +107,11 @@ export default function Home() {
   return (
     <div className=" w-screen min-h-screen wrap">
       <div className="hero flex flex-col justify-center items-center">
-        <img src="baixados-2.png" className="halloween" />
-        <img src="/logo-haloweeen.png" alt="Arapuca" className="logomarca" />
+        <img src="/logo.png" alt="Arapuca" className="logomarca" />
       </div>
 
       <div className="stats gap-0 md:gap-10">
         <div className="slice flex flex-col justify-center items-center text-center relative">
-          <img
-            src="morcelo.png"
-            className="absolute top-[220%] md:top-[-80%] md:left-[215%] w-[80%]"
-          />
           <div className="font-bahisy text-[200%] text-red-600">Data</div>
           <div className="font-hanson text-[195%] md:text-[300%] leading-8 md:leading-10">
             {CONFIG.evento.data}
@@ -143,8 +138,12 @@ export default function Home() {
         <section className="step flex flex-col gap-10 justify-center items-center">
           <div className="border relative flex flex-col justify-center items-center gap-5 pt-6 pb-3 rounded-lg w-[100%] md:w-[50%] ">
             <img
-              src="morcelo.png"
-              className={`absolute w-[100px] md:w-[150px] bottom-[50%] right-[70%] md:right-[94%] rotate-[60deg]`}
+              src="element-1.png"
+              className={`absolute w-[50px] bottom-[50%] right-[87%] md:right-[94%] rotate-[60deg]`}
+            />
+            <img
+              src="element-2.png"
+              className={`absolute top-[65%] left-[90%] md:left-[96%] w-[50px] rotate-[60deg]`}
             />
 
             <h2 className="step-title font-archivo">Dados</h2>
